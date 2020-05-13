@@ -1,4 +1,5 @@
 import graphene
+from django.contrib.auth import authenticate, login
 from graphene_django.types import DjangoObjectType
 
 from .models import User
@@ -26,7 +27,30 @@ class SignUpMutation(graphene.Mutation):
                                         email=email, first_name=first_name, last_name=last_name)
         user.save()
 
+        user = authenticate(request=info.context,
+                            username=username, password=password)
+        login(info.context, user)
         return SignUpMutation(user=user)
+
+
+class LoginMutation(graphene.Mutation):
+    class Arguments:
+
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    user = graphene.Field(UserType)
+
+    def mutate(self, info, username, password):
+
+        user = authenticate(request=info.context,
+                            username=username, password=password)
+
+        if user is not None:
+            login(info.context, user)
+            return LoginMutation(user=user)
+        else:
+            raise ValueError('Username or password is incorrect!')
 
 
 class Query(object):
@@ -38,3 +62,4 @@ class Query(object):
 
 class Mutation(object):
     signup = SignUpMutation.Field()
+    login = LoginMutation.Field()
