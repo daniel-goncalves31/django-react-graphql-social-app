@@ -1,3 +1,5 @@
 .vscode
 server/config.ini
 **/*.env
+server/static/**/*.*
+!**/.gitkeep
