@@ -1,0 +1,49 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^2.2.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^14.0.1",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "autoprefixer": "^9.7.6",
+    "postcss-cli": "^7.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "typescript": "~3.7.2"
+  },
+  "scripts": {
+    "tailwind:watch": "postcss -w src/tailwind.css -o src/tailwind.generated.css",
+    "start:react": "react-scripts start",
+    "start": "run-p tailwind:watch start:react ",
+    "prebuild": "postcss src/tailwind.css -o src/tailwind.generated.css",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "tailwindcss": "^1.4.6"
+  }
+}
