@@ -11,7 +11,7 @@ class UserType(DjangoObjectType):
         exclude = ['password']
 
 
-class SignUpMutation(graphene.Mutation):
+class SignUp(graphene.Mutation):
     class Arguments:
 
         username = graphene.String(required=True)
@@ -30,25 +30,27 @@ class SignUpMutation(graphene.Mutation):
         user = authenticate(request=info.context,
                             username=username, password=password)
         login(info.context, user)
-        return SignUpMutation(user=user)
+        return SignUp(user=user)
 
 
-class LoginMutation(graphene.Mutation):
+class LoginInputType(graphene.InputObjectType):
+    username = graphene.String(required=True)
+    password = graphene.String(required=True)
+
+
+class Login(graphene.Mutation):
     class Arguments:
-
-        username = graphene.String(required=True)
-        password = graphene.String(required=True)
+        login_input = LoginInputType(required=True)
 
     user = graphene.Field(UserType)
 
-    def mutate(self, info, username, password):
-
+    def mutate(self, info, login_input):
         user = authenticate(request=info.context,
-                            username=username, password=password)
+                            username=login_input['username'], password=login_input['password'])
 
         if user is not None:
             login(info.context, user)
-            return LoginMutation(user=user)
+            return Login(user=user)
         else:
             raise ValueError('Username or password is incorrect!')
 
@@ -61,5 +63,5 @@ class Query(object):
 
 
 class Mutation(object):
-    signup = SignUpMutation.Field()
-    login = LoginMutation.Field()
+    signup = SignUp.Field()
+    login = Login.Field()

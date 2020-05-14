@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
+    'corsheaders'
 
 ]
 
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -136,11 +138,12 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/images/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 GRAPHENE = {
     'SCHEMA': 'server.schema.schema'
@@ -171,3 +174,7 @@ AUTH_USER_MODEL = "api.User"
 # }
 # LOGIN_REDIRECT_URL = "http://localhost:3000"
 # # SOCIALACCOUNT_ADAPTER = "api.adapters.AccountAdapter"
+
+CORS_ORIGIN_WHITELIST = [
+    config.get('client', 'CLIENT_URL')
+]
