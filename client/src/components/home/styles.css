@@ -1,0 +1,16 @@
+.navbar {
+  max-height: 60px;
+}
+
+.dropdown-menu {
+  top: 44px;
+  display: none;
+}
+
+.dropdown-menu li {
+  border-top: 1px solid rgb(241, 241, 241);
+}
+
+.dropdown:hover > .dropdown-menu {
+  display: block;
+}

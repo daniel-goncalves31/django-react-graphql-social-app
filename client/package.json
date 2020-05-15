@@ -19,6 +19,7 @@
     "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.4",
@@ -29,7 +30,7 @@
     "tailwind:watch": "postcss -w src/tailwind.css -o src/tailwind.generated.css",
     "start": "react-scripts start",
     "start:all": "run-p tailwind:watch start:react",
-    "prebuild": "postcss src/tailwind.css -o src/tailwind.generated.css",
+    "tailwind": "postcss src/tailwind.css -o src/tailwind.generated.css",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -52,12 +53,12 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.13.5",
+    "@graphql-codegen/typescript": "1.13.5",
+    "@graphql-codegen/typescript-operations": "1.13.5",
+    "@graphql-codegen/typescript-react-apollo": "1.13.5",
     "@types/react-router-dom": "^5.1.5",
     "@types/yup": "^0.28.3",
     "npm-run-all": "^4.1.5",
-    "tailwindcss": "^1.4.6",
-    "@graphql-codegen/typescript": "1.13.5",
-    "@graphql-codegen/typescript-operations": "1.13.5",
-    "@graphql-codegen/typescript-react-apollo": "1.13.5"
+    "tailwindcss": "^1.4.6"
   }
 }
