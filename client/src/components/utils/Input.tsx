@@ -37,10 +37,10 @@ const Input: React.FC<Props> = ({
           error && touched
             ? "border-red-500 bg-red-100"
             : "border-gray-700 bg-white"
-        } appearance-none block w-full mb-3 py-3 px-4 shadow-inner text-gray-700 border tracking-wide leading-tight border-gray-200 rounded focus:outline-none focus:border-purple-400`}
+        } appearance-none block w-full py-3 px-4 shadow-inner text-gray-700 text-xs border tracking-wide leading-tight border-gray-200 rounded focus:outline-none focus:border-purple-400`}
       />
       {error && touched ? (
-        <p className="text-red-500 text-xs italic">{error}</p>
+        <p className="text-red-500 text-xs italic mt-2">{error}</p>
       ) : null}
     </div>
   );

@@ -1,3 +1,5 @@
+import logging
+
 import graphene
 from django.contrib.auth import authenticate, login
 from django.shortcuts import HttpResponse
@@ -14,28 +16,29 @@ class UserType(DjangoObjectType):
         exclude = ['password']
 
 
+class SignUpInputType(graphene.InputObjectType):
+    username = graphene.String(required=True)
+    password = graphene.String(required=True)
+    email = graphene.String(required=True)
+    first_name = graphene.String(required=True)
+    last_name = graphene.String(required=True)
+
+
 class SignUp(graphene.Mutation):
     class Arguments:
-
-        username = graphene.String(required=True)
-        password = graphene.String(required=True)
-        email = graphene.String(required=True)
-        first_name = graphene.String(required=True)
-        last_name = graphene.String(required=True)
+        signup_input = SignUpInputType(required=True)
 
     user = graphene.Field(UserType)
 
-    def mutate(self, info, username, password, email, first_name, last_name):
-        user = User.objects.create_user(username=username, password=password,
-                                        email=email, first_name=first_name, last_name=last_name)
+    def mutate(self, info, signup_input):
+        user = User.objects.create_user(**signup_input)
         user.save()
 
         user = authenticate(request=info.context,
-                            username=username, password=password)
+                            username=signup_input['username'], password=signup_input['password'])
         login(info.context, user)
-        # response = HttpResponse('')
-        # token = jwt_encode({'username': user.username})
-        # set_cookie(response, 'JWT', token, 300)
+        token = jwt_encode({'username': user.username})
+        info.context.set_jwt_cookie = token
         return SignUp(user=user)
 
 
@@ -52,7 +55,7 @@ class Login(graphene.Mutation):
 
     def mutate(self, info, login_input):
         user = authenticate(request=info.context,
-                            username=login_input['username'], password=login_input['password'])
+                            **login_input)
 
         if user is not None:
             login(info.context, user)

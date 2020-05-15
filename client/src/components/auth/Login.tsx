@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUserContext } from "../../context/UserContext";
 import { useLoginMutation } from "../../graphql/generated";
@@ -54,7 +55,7 @@ const Login: React.FC<Props> = () => {
       <div className="bg-purple-300 w-6/12 h-full flex items-center justify-center">
         <form
           onSubmit={formik.handleSubmit}
-          className="w-9/12 rounded shadow-lg bg-white px-5 py-8"
+          className="w-9/12 rounded shadow-lg bg-white px-5 py-6"
         >
           <div className="flex justify-center mb-6">
             <p className="font-extrabold text-gray-800 text-3xl leading-tight">
@@ -62,44 +63,6 @@ const Login: React.FC<Props> = () => {
               <span className="text-purple-600">Welcome back!</span>
             </p>
           </div>
-          <div className="flex space-x-6">
-            <Input
-              label="username"
-              type="text"
-              error={formik.errors.username}
-              touched={formik.touched.username}
-              value={formik.values.username}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <Input
-              label="password"
-              type="password"
-              error={formik.errors.password}
-              touched={formik.touched.password}
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-          </div>
-          <Input
-            label="username"
-            type="text"
-            error={formik.errors.username}
-            touched={formik.touched.username}
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          <Input
-            label="password"
-            type="password"
-            error={formik.errors.password}
-            touched={formik.touched.password}
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
           <Input
             label="username"
             type="text"
@@ -122,10 +85,16 @@ const Login: React.FC<Props> = () => {
           <button
             type="submit"
             disabled={!formik.isValid || loading}
-            className="block w-full py-2 mt-8 bg-purple-400 rounded shadow text-white font-semibold tracking-widest transition ease-linear duration-300 text-md hover:bg-purple-600"
+            className="block w-full py-2 mt-6 bg-purple-400 rounded shadow text-white font-semibold tracking-widest transition ease-linear duration-300 text-md hover:bg-purple-600"
           >
             Login
           </button>
+          <Link
+            to="/signup"
+            className="block text-center mt-3 underline text-purple-400 text-xs"
+          >
+            Do not have an account? Sign up
+          </Link>
         </form>
       </div>
     </div>

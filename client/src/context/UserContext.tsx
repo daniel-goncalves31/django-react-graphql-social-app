@@ -6,11 +6,13 @@ import { MeDocument, MeQuery, UserType as User } from "../graphql/generated";
 interface Context {
   currentUser: User | null | undefined;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null | undefined>>;
+  isAuthenticated: boolean;
 }
 
 const UserContext = React.createContext<Context>({
   currentUser: null,
   setCurrentUser: () => {},
+  isAuthenticated: false,
 });
 
 const useUserContext = () => useContext(UserContext);
@@ -43,7 +45,9 @@ const UserProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+    <UserContext.Provider
+      value={{ currentUser, setCurrentUser, isAuthenticated: !!currentUser }}
+    >
       {children}
     </UserContext.Provider>
   );
