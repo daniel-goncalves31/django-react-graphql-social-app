@@ -27,8 +27,8 @@
   },
   "scripts": {
     "tailwind:watch": "postcss -w src/tailwind.css -o src/tailwind.generated.css",
-    "start:react": "react-scripts start",
-    "start": "run-p tailwind:watch start:react",
+    "start": "react-scripts start",
+    "start:all": "run-p tailwind:watch start:react",
     "prebuild": "postcss src/tailwind.css -o src/tailwind.generated.css",
     "build": "react-scripts build",
     "test": "react-scripts test",

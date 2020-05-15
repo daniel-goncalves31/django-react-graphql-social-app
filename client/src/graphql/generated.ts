@@ -15,11 +15,18 @@ export type Scalars = {
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
   DateTime: any;
+  /**
+   * The `GenericScalar` scalar type represents a generic
+   * GraphQL scalar value that could be:
+   * String, Boolean, Int, Float, List or Object.
+   */
+  GenericScalar: any;
 };
 
 export type Query = {
    __typename?: 'Query';
   users?: Maybe<Array<Maybe<UserType>>>;
+  me?: Maybe<UserType>;
 };
 
 export type UserType = {
@@ -46,6 +53,9 @@ export type Mutation = {
    __typename?: 'Mutation';
   signup?: Maybe<SignUp>;
   login?: Maybe<Login>;
+  tokenAuth?: Maybe<ObtainJsonWebToken>;
+  verifyToken?: Maybe<Verify>;
+  refreshToken?: Maybe<Refresh>;
 };
 
 
@@ -60,6 +70,22 @@ export type MutationSignupArgs = {
 
 export type MutationLoginArgs = {
   loginInput: LoginInputType;
+};
+
+
+export type MutationTokenAuthArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationVerifyTokenArgs = {
+  token?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationRefreshTokenArgs = {
+  token?: Maybe<Scalars['String']>;
 };
 
 export type SignUp = {
@@ -77,15 +103,38 @@ export type LoginInputType = {
   password: Scalars['String'];
 };
 
+export type ObtainJsonWebToken = {
+   __typename?: 'ObtainJSONWebToken';
+  payload: Scalars['GenericScalar'];
+  refreshExpiresIn: Scalars['Int'];
+  user?: Maybe<UserType>;
+  token: Scalars['String'];
+};
+
+
+export type Verify = {
+   __typename?: 'Verify';
+  payload: Scalars['GenericScalar'];
+};
+
+export type Refresh = {
+   __typename?: 'Refresh';
+  payload: Scalars['GenericScalar'];
+  refreshExpiresIn: Scalars['Int'];
+  token: Scalars['String'];
+};
+
 export type LoginMutationVariables = {
-  loginInput: LoginInputType;
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { login?: Maybe<(
-    { __typename?: 'Login' }
+  & { tokenAuth?: Maybe<(
+    { __typename?: 'ObtainJSONWebToken' }
+    & Pick<ObtainJsonWebToken, 'token'>
     & { user?: Maybe<(
       { __typename?: 'UserType' }
       & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined'>
@@ -93,10 +142,22 @@ export type LoginMutation = (
   )> }
 );
 
+export type MeQueryVariables = {};
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'UserType' }
+    & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined'>
+  )> }
+);
+
 
 export const LoginDocument = gql`
-    mutation Login($loginInput: LoginInputType!) {
-  login(loginInput: $loginInput) {
+    mutation Login($username: String!, $password: String!) {
+  tokenAuth(username: $username, password: $password) {
+    token
     user {
       id
       username
@@ -129,7 +190,8 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, 
  * @example
  * const [loginMutation, { data, loading, error }] = useLoginMutation({
  *   variables: {
- *      loginInput: // value for 'loginInput'
+ *      username: // value for 'username'
+ *      password: // value for 'password'
  *   },
  * });
  */
@@ -139,3 +201,46 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    username
+    email
+    firstName
+    lastName
+    isSuperuser
+    lastLogin
+    username
+    photo
+    isStaff
+    isActive
+    dateJoined
+  }
+}
+    `;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+      }
+export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;

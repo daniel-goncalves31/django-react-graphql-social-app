@@ -14,6 +14,7 @@ psycopg2 = "*"
 configparser = "*"
 pillow = "*"
 django-cors-headers = "*"
+django-graphql-jwt = "*"
 
 [requires]
 python_version = "3.8"

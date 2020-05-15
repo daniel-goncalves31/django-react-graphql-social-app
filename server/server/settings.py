@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -146,8 +147,16 @@ STATICFILES_DIRS = [
 
 
 GRAPHENE = {
-    'SCHEMA': 'server.schema.schema'
+    'SCHEMA': 'server.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 AUTH_USER_MODEL = "api.User"
 
@@ -178,3 +187,5 @@ AUTH_USER_MODEL = "api.User"
 CORS_ORIGIN_WHITELIST = [
     config.get('client', 'CLIENT_URL')
 ]
+
+CORS_ALLOW_CREDENTIALS = True

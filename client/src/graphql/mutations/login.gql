@@ -1,5 +1,6 @@
-mutation Login($loginInput: LoginInputType!) {
-  login(loginInput: $loginInput) {
+mutation Login($username: String!, $password: String!) {
+  tokenAuth(username: $username, password: $password) {
+    token
     user {
       id
       username

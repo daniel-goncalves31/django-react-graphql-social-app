@@ -8,6 +8,7 @@ import * as serviceWorker from "./serviceWorker";
 
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
+  credentials: "include",
 });
 
 ReactDOM.render(

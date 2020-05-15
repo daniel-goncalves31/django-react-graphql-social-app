@@ -1,6 +1,9 @@
 import graphene
 from django.contrib.auth import authenticate, login
+from django.shortcuts import HttpResponse
 from graphene_django.types import DjangoObjectType
+from graphql_jwt.decorators import login_required
+from graphql_jwt.utils import jwt_encode, set_cookie
 
 from .models import User
 
@@ -30,6 +33,9 @@ class SignUp(graphene.Mutation):
         user = authenticate(request=info.context,
                             username=username, password=password)
         login(info.context, user)
+        # response = HttpResponse('')
+        # token = jwt_encode({'username': user.username})
+        # set_cookie(response, 'JWT', token, 300)
         return SignUp(user=user)
 
 
@@ -57,9 +63,15 @@ class Login(graphene.Mutation):
 
 class Query(object):
     users = graphene.List(UserType)
+    me = graphene.Field(UserType)
 
     def resolve_users(self, info, **kwargs):
         return User.objects.all()
+
+    @login_required
+    def resolve_me(self, info, **kwargs):
+        user = info.context.user
+        return user
 
 
 class Mutation(object):

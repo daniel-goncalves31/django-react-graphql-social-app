@@ -13,13 +13,18 @@ const Login: React.FC<Props> = () => {
   const [login, { loading }] = useLoginMutation();
   const { setCurrentUser } = useUserContext();
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async ({ username, password }: any) => {
     try {
       const response = await login({
-        variables: { loginInput: values },
+        variables: { username, password },
       });
-      if (response.data && response.data.login && response.data?.login.user) {
-        setCurrentUser({ ...response.data?.login?.user });
+      console.log(response.data);
+      if (
+        response.data &&
+        response.data.tokenAuth &&
+        response.data?.tokenAuth.user
+      ) {
+        setCurrentUser({ ...response.data.tokenAuth.user });
         toast.success("Logged successfully!");
         console.log("submited");
       } else {
@@ -43,10 +48,10 @@ const Login: React.FC<Props> = () => {
 
   return (
     <div className="w-full h-screen flex">
-      <div className="bg-purple-100 w-7/12 h-full flex items-center justify-center">
+      <div className="bg-purple-100 w-6/12 h-full flex items-center justify-center">
         <img src={AuthImage} alt="auth" className="h-2/3 w-2/3 object-cover" />
       </div>
-      <div className="bg-purple-300 w-5/12 h-full flex items-center justify-center">
+      <div className="bg-purple-300 w-6/12 h-full flex items-center justify-center">
         <form
           onSubmit={formik.handleSubmit}
           className="w-9/12 rounded shadow-lg bg-white px-5 py-8"
@@ -57,6 +62,44 @@ const Login: React.FC<Props> = () => {
               <span className="text-purple-600">Welcome back!</span>
             </p>
           </div>
+          <div className="flex space-x-6">
+            <Input
+              label="username"
+              type="text"
+              error={formik.errors.username}
+              touched={formik.touched.username}
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Input
+              label="password"
+              type="password"
+              error={formik.errors.password}
+              touched={formik.touched.password}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+          <Input
+            label="username"
+            type="text"
+            error={formik.errors.username}
+            touched={formik.touched.username}
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <Input
+            label="password"
+            type="password"
+            error={formik.errors.password}
+            touched={formik.touched.password}
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
           <Input
             label="username"
             type="text"
