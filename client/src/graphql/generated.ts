@@ -53,10 +53,10 @@ export type UserType = {
 export type Mutation = {
    __typename?: 'Mutation';
   signup?: Maybe<SignUp>;
-  login?: Maybe<Login>;
-  tokenAuth?: Maybe<ObtainJsonWebToken>;
+  login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
+  logout?: Maybe<DeleteJsonWebTokenCookie>;
 };
 
 
@@ -66,11 +66,6 @@ export type MutationSignupArgs = {
 
 
 export type MutationLoginArgs = {
-  loginInput: LoginInputType;
-};
-
-
-export type MutationTokenAuthArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
 };
@@ -98,16 +93,6 @@ export type SignUpInputType = {
   lastName: Scalars['String'];
 };
 
-export type Login = {
-   __typename?: 'Login';
-  user?: Maybe<UserType>;
-};
-
-export type LoginInputType = {
-  username: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
@@ -129,6 +114,22 @@ export type Refresh = {
   token: Scalars['String'];
 };
 
+export type DeleteJsonWebTokenCookie = {
+   __typename?: 'DeleteJSONWebTokenCookie';
+  deleted: Scalars['Boolean'];
+};
+
+export type LogoutMutationVariables = {};
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & { logout?: Maybe<(
+    { __typename?: 'DeleteJSONWebTokenCookie' }
+    & Pick<DeleteJsonWebTokenCookie, 'deleted'>
+  )> }
+);
+
 export type LoginMutationVariables = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -137,7 +138,7 @@ export type LoginMutationVariables = {
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { tokenAuth?: Maybe<(
+  & { login?: Maybe<(
     { __typename?: 'ObtainJSONWebToken' }
     & { user?: Maybe<(
       { __typename?: 'UserType' }
@@ -174,9 +175,40 @@ export type MeQuery = (
 );
 
 
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout {
+    deleted
+  }
+}
+    `;
+export type LogoutMutationFn = ApolloReactCommon.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
-  tokenAuth(username: $username, password: $password) {
+  login(username: $username, password: $password) {
     user {
       id
       username

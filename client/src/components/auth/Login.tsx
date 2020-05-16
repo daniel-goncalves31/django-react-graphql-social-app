@@ -20,12 +20,8 @@ const Login: React.FC<Props> = () => {
         variables: { username, password },
       });
       console.log(response.data);
-      if (
-        response.data &&
-        response.data.tokenAuth &&
-        response.data?.tokenAuth.user
-      ) {
-        setCurrentUser({ ...response.data.tokenAuth.user });
+      if (response.data && response.data.login && response.data?.login.user) {
+        setCurrentUser({ ...response.data.login.user });
         toast.success("Logged successfully!");
         console.log("submited");
       } else {

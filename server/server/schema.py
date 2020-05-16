@@ -19,9 +19,10 @@ class Query(ApiQuery, graphene.ObjectType):
 
 
 class Mutation(ApiMutation, graphene.ObjectType):
-    token_auth = ObtainJSONWebToken.Field()
+    login = ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
+    logout = graphql_jwt.DeleteJSONWebTokenCookie.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

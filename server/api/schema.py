@@ -37,31 +37,10 @@ class SignUp(graphene.Mutation):
         user = authenticate(request=info.context,
                             username=signup_input['username'], password=signup_input['password'])
         login(info.context, user)
+
         token = jwt_encode({'username': user.username})
         info.context.set_jwt_cookie = token
         return SignUp(user=user)
-
-
-class LoginInputType(graphene.InputObjectType):
-    username = graphene.String(required=True)
-    password = graphene.String(required=True)
-
-
-class Login(graphene.Mutation):
-    class Arguments:
-        login_input = LoginInputType(required=True)
-
-    user = graphene.Field(UserType)
-
-    def mutate(self, info, login_input):
-        user = authenticate(request=info.context,
-                            **login_input)
-
-        if user is not None:
-            login(info.context, user)
-            return Login(user=user)
-        else:
-            raise ValueError('Username or password is incorrect!')
 
 
 class Query(object):
@@ -79,4 +58,3 @@ class Query(object):
 
 class Mutation(object):
     signup = SignUp.Field()
-    login = Login.Field()

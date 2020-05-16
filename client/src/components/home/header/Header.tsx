@@ -15,6 +15,7 @@ const Header: React.FC<Props> = () => {
         className="w-full h-48 object-cover object-center flex"
         src={image}
         alt="background"
+        style={{ filter: "brightness(0.8)" }}
       />
     </>
   );
