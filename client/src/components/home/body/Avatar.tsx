@@ -9,11 +9,13 @@ const Avatar: React.FC<Props> = () => {
   const image = getImageUrl(currentUser?.photo, "photo");
 
   return (
-    <img
-      className="h-32 w-32 rounded-full shadow object-center object-cover border-2 border-gray-300"
-      src={image}
-      alt="user"
-    />
+    <div className="w-2/12 flex justify-center">
+      <img
+        className="h-40 w-40 rounded-full shadow object-center object-cover border-2 border-gray-300"
+        src={image}
+        alt="user"
+      />
+    </div>
   );
 };
 
