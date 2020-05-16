@@ -6,7 +6,7 @@ from .models import User
 # Add photo field to the admin user panel
 fieldsets = list(UserAdmin.fieldsets)
 fieldsets[1] = ('Personal Info', {
-    'fields': ('first_name', 'last_name', 'email', 'photo')})
+    'fields': ('first_name', 'last_name', 'email', 'photo', 'back_image')})
 fieldsets = tuple(fieldsets)
 
 
