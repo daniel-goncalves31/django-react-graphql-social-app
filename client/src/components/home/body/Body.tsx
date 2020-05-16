@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "./Avatar";
+import Feed from "./content/Feed";
 import NavigationMenu from "./navigation-menu/NavigationMenu";
 import SideMenu from "./side-menu/SideMenu";
 
@@ -13,11 +14,13 @@ const Body: React.FC<Props> = () => {
         <NavigationMenu />
       </div>
       <div className="flex w-full h-56">
-        <div className="h-full w-2/12 p-4">
+        <div className="h-full w-2/12 p-2">
           <SideMenu />
         </div>
-        <div className="h-full w-7/12 bg-gray-400"></div>
-        <div className="h-full w-3/12 bg-gray-600"></div>
+        <div className="h-full w-7/12 px-2 my-5">
+          <Feed />
+        </div>
+        <div className="h-full w-3/12 p-2"></div>
       </div>
     </div>
   );
