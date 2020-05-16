@@ -1,5 +1,6 @@
 import React from "react";
-import Navbar from "./Navbar";
+import Body from "./body/Body";
+import Header from "./header/Header";
 import "./styles.css";
 
 interface Props {}
@@ -7,7 +8,8 @@ interface Props {}
 const Home: React.FC<Props> = () => {
   return (
     <>
-      <Navbar />
+      <Header />
+      <Body />
     </>
   );
 };

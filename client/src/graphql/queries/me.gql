@@ -12,5 +12,6 @@ query Me {
     isStaff
     isActive
     dateJoined
+    backImage
   }
 }

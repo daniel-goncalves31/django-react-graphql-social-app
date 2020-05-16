@@ -7,7 +7,7 @@ import { useLoginMutation } from "../../graphql/generated";
 import AuthImage from "../../images/auth.svg";
 import { handleErrors } from "../../utils/error_handler";
 import { loginSchema } from "../../utils/schemas/login";
-import Input from "../utils/Input";
+import Input from "../shared/Input";
 interface Props {}
 
 const Login: React.FC<Props> = () => {

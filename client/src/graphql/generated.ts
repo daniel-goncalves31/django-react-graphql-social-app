@@ -46,6 +46,7 @@ export type UserType = {
   dateJoined: Scalars['DateTime'];
   email: Scalars['String'];
   photo?: Maybe<Scalars['String']>;
+  backImage?: Maybe<Scalars['String']>;
 };
 
 
@@ -140,7 +141,7 @@ export type LoginMutation = (
     { __typename?: 'ObtainJSONWebToken' }
     & { user?: Maybe<(
       { __typename?: 'UserType' }
-      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined'>
+      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
 );
@@ -156,7 +157,7 @@ export type SignUpMutation = (
     { __typename?: 'SignUp' }
     & { user?: Maybe<(
       { __typename?: 'UserType' }
-      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined'>
+      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
 );
@@ -168,7 +169,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'UserType' }
-    & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined'>
+    & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
   )> }
 );
 
@@ -189,6 +190,7 @@ export const LoginDocument = gql`
       isStaff
       isActive
       dateJoined
+      backImage
     }
   }
 }
@@ -235,6 +237,7 @@ export const SignUpDocument = gql`
       isStaff
       isActive
       dateJoined
+      backImage
     }
   }
 }
@@ -279,6 +282,7 @@ export const MeDocument = gql`
     isStaff
     isActive
     dateJoined
+    backImage
   }
 }
     `;

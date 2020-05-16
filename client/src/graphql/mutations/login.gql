@@ -13,6 +13,7 @@ mutation Login($username: String!, $password: String!) {
       isStaff
       isActive
       dateJoined
+      backImage
     }
   }
 }

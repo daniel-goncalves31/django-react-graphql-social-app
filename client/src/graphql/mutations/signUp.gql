@@ -13,6 +13,7 @@ mutation SignUp($signupInput: SignUpInputType!) {
       isStaff
       isActive
       dateJoined
+      backImage
     }
   }
 }

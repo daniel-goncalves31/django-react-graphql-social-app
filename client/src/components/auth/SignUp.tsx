@@ -7,7 +7,7 @@ import { useSignUpMutation } from "../../graphql/generated";
 import AuthImage from "../../images/auth.svg";
 import { handleErrors } from "../../utils/error_handler";
 import { signUpSchema } from "../../utils/schemas/signUp";
-import Input from "../utils/Input";
+import Input from "../shared/Input";
 interface Props {}
 
 const SignUp: React.FC<Props> = () => {
