@@ -1,6 +1,7 @@
 import React from "react";
 import Avatar from "./Avatar";
 import Feed from "./content/Feed";
+import FriendsList from "./friends-list/FriendsLists";
 import NavigationMenu from "./navigation-menu/NavigationMenu";
 import SideMenu from "./side-menu/SideMenu";
 
@@ -17,10 +18,12 @@ const Body: React.FC<Props> = () => {
         <div className="h-full w-2/12 p-2">
           <SideMenu />
         </div>
-        <div className="h-full w-7/12 px-2 my-5">
+        <div className="h-full w-7/12 px-2 my-5 z-10">
           <Feed />
         </div>
-        <div className="h-full w-3/12 p-2"></div>
+        <div className="h-full w-3/12 my-5 z-10">
+          <FriendsList />
+        </div>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const FeedItem: React.FC<Props> = () => {
   const image = getImageUrl(currentUser?.photo, "photo");
   const { firstName, lastName } = currentUser!;
   return (
-    <div className="ml-4 space-y-1">
+    <div className="ml-4 space-y-2">
       <div className="flex">
         <img
           className="w-16 h-16 rounded-full object-cover object-center block"
@@ -20,7 +20,7 @@ const FeedItem: React.FC<Props> = () => {
           alt="user"
         />
         <div className="ml-2">
-          <h1 className="text-gray-900 font-bold">{`${firstName} ${lastName}`}</h1>
+          <h1 className="text-gray-900 font-bold tracking-wide">{`${firstName} ${lastName}`}</h1>
           <p className="text-xs italic">{new Date().toLocaleString()}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ const FeedItem: React.FC<Props> = () => {
       <div className="flex justify-end p-2 space-x-6">
         <button
           type="button"
-          className="flex items-center outline-none bg-transparent text-indigo-400 text-sm hover:text-indigo-600"
+          className="flex items-center outline-none bg-transparent text-indigo-400 text-xs hover:text-indigo-600"
           style={{ lineHeight: "1px" }}
         >
           <FiThumbsUp className="mr-1" />
@@ -46,7 +46,7 @@ const FeedItem: React.FC<Props> = () => {
         </button>
         <button
           type="button"
-          className="flex items-center outline-none bg-transparent text-gray-600 text-sm hover:text-gray-800"
+          className="flex items-center outline-none bg-transparent text-gray-600 text-xs hover:text-gray-800"
           style={{ lineHeight: "1px" }}
         >
           <GoCommentDiscussion className="mr-1" />
