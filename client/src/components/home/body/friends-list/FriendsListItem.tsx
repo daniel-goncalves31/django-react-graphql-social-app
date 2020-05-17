@@ -1,13 +1,13 @@
 import React from "react";
-import { useUserContext } from "../../../../context/UserContext";
+import { UserType } from "../../../../graphql/generated";
 import { getImageUrl } from "../../../../utils/getImageUrl";
 
-interface Props {}
+interface Props {
+  user: UserType;
+}
 
-const FriendsListItem: React.FC<Props> = () => {
-  const { currentUser } = useUserContext();
-  const { name, photo } = currentUser!;
-  const image = getImageUrl(photo, "photo");
+const FriendsListItem: React.FC<Props> = ({ user }) => {
+  const image = getImageUrl(user.photo, "photo");
   return (
     <div className="p-2 flex hover:bg-gray-100 cursor-pointer">
       <img
@@ -16,7 +16,7 @@ const FriendsListItem: React.FC<Props> = () => {
         className="w-10 h-10 rounded-full object-center object-cover"
       />
       <div className="ml-2">
-        <h1 className="text-xs text-gray-800 font-bold">{name}</h1>
+        <h1 className="text-xs text-gray-800 font-bold">{user.name}</h1>
       </div>
     </div>
   );

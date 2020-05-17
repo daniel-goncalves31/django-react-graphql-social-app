@@ -72,11 +72,12 @@ class CreatePost(graphene.Mutation):
 
 class Query(object):
     users = graphene.List(UserType)
-    me = graphene.Field(UserType)
     posts = graphene.List(PostType)
+    me = graphene.Field(UserType)
 
+    @login_required
     def resolve_users(self, info, **kwargs):
-        return User.objects.all()
+        return User.objects.exclude(id=info.context.user.id).order_by('name')
 
     @login_required
     def resolve_posts(self, info, **kwargs):

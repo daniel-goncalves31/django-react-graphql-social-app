@@ -16,8 +16,6 @@ const Feed: React.FC<Props> = () => {
     return <p>Loading...</p>;
   }
 
-  console.log(data);
-
   return (
     <div className="space-y-4 pt-2">
       {data?.posts?.map((post) => (
