@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='name',
-            field=models.CharField(max_length=255),
+            field=models.CharField(max_length=255, default=''),
             preserve_default=False,
         ),
     ]

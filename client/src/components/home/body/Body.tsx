@@ -9,7 +9,7 @@ interface Props {}
 
 const Body: React.FC<Props> = () => {
   return (
-    <div className="relative bg-white">
+    <div className="relative bg-gray-100">
       <div className="absolute flex w-full" style={{ top: "-5rem" }}>
         <Avatar />
         <NavigationMenu />

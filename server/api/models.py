@@ -36,5 +36,5 @@ class Post(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=1000)
-    image = models.ImageField(upload_to=post_image_path)
+    image = models.ImageField(upload_to=post_image_path, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -9,7 +9,7 @@ interface Props {}
 const SideMenu: React.FC<Props> = () => {
   return (
     <>
-      <div className="mt-20 bg-gray-100 shadow rounded">
+      <div className="mt-20 bg-white shadow rounded">
         <SideMenuItem Icon={MdRssFeed}>Activities</SideMenuItem>
         <SideMenuItem Icon={FiUsers}>Friends</SideMenuItem>
         <SideMenuItem Icon={FiHeart}>You Liked</SideMenuItem>

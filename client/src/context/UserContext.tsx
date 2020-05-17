@@ -1,7 +1,6 @@
 import { useApolloClient } from "@apollo/react-hooks";
-import { ApolloQueryResult } from "apollo-boost";
 import React, { useContext, useEffect, useState } from "react";
-import { MeDocument, MeQuery, UserType as User } from "../graphql/generated";
+import { MeDocument, UserType as User } from "../graphql/generated";
 
 interface Context {
   currentUser: User | null | undefined;
@@ -24,7 +23,7 @@ const UserProvider: React.FC = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res: ApolloQueryResult<MeQuery> = await query({
+      const res = await query({
         query: MeDocument,
       });
       const user = res.data.me;
