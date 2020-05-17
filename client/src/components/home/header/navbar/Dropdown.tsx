@@ -42,9 +42,7 @@ const Dropdown: React.FC<Props> = () => {
           alt="user"
           className="h-8 w-8 rounded-full object-center object-cover border-2 border-gray-300"
         />
-        <span className="font-medium cursor-default">
-          {currentUser?.firstName + " " + currentUser?.lastName}
-        </span>
+        <span className="font-medium cursor-default">{currentUser?.name}</span>
         <RiArrowDropDownLine className="h-6 w-6" />
       </div>
       <ul className="dropdown-menu absolute left-0 rounded shadow w-full overflow-hidden bg-white">

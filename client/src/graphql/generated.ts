@@ -43,13 +43,12 @@ export type UserType = {
   isSuperuser: Scalars['Boolean'];
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
   /** Designates whether the user can log into this admin site. */
   isStaff: Scalars['Boolean'];
   /** Designates whether this user should be treated as active. Unselect this instead of deleting accounts. */
   isActive: Scalars['Boolean'];
   dateJoined: Scalars['DateTime'];
+  name: Scalars['String'];
   email: Scalars['String'];
   photo?: Maybe<Scalars['String']>;
   backImage?: Maybe<Scalars['String']>;
@@ -107,11 +106,10 @@ export type SignUp = {
 };
 
 export type SignUpInputType = {
+  name: Scalars['String'];
   username: Scalars['String'];
   password: Scalars['String'];
   email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
 };
 
 export type CreatePost = {
@@ -165,7 +163,7 @@ export type CreatePostMutation = (
       & Pick<PostType, 'id' | 'text' | 'image' | 'createdAt'>
       & { user: (
         { __typename?: 'UserType' }
-        & Pick<UserType, 'id' | 'firstName' | 'lastName'>
+        & Pick<UserType, 'id' | 'name'>
       ) }
     )> }
   )> }
@@ -194,7 +192,7 @@ export type LoginMutation = (
     { __typename?: 'ObtainJSONWebToken' }
     & { user?: Maybe<(
       { __typename?: 'UserType' }
-      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
+      & Pick<UserType, 'id' | 'username' | 'email' | 'name' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
 );
@@ -210,7 +208,7 @@ export type SignUpMutation = (
     { __typename?: 'SignUp' }
     & { user?: Maybe<(
       { __typename?: 'UserType' }
-      & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
+      & Pick<UserType, 'id' | 'username' | 'email' | 'name' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
 );
@@ -222,7 +220,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'UserType' }
-    & Pick<UserType, 'id' | 'username' | 'email' | 'firstName' | 'lastName' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
+    & Pick<UserType, 'id' | 'username' | 'email' | 'name' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
   )> }
 );
 
@@ -237,8 +235,7 @@ export const CreatePostDocument = gql`
       createdAt
       user {
         id
-        firstName
-        lastName
+        name
       }
     }
   }
@@ -307,8 +304,7 @@ export const LoginDocument = gql`
       id
       username
       email
-      firstName
-      lastName
+      name
       isSuperuser
       lastLogin
       username
@@ -354,8 +350,7 @@ export const SignUpDocument = gql`
       id
       username
       email
-      firstName
-      lastName
+      name
       isSuperuser
       lastLogin
       username
@@ -399,8 +394,7 @@ export const MeDocument = gql`
     id
     username
     email
-    firstName
-    lastName
+    name
     isSuperuser
     lastLogin
     username

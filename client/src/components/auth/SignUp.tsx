@@ -37,12 +37,11 @@ const SignUp: React.FC<Props> = () => {
 
   const formik = useFormik({
     initialValues: {
+      name: "",
       username: "",
       password: "",
       confirmPassword: "",
       email: "",
-      firstName: "",
-      lastName: "",
     },
     validationSchema: signUpSchema,
     onSubmit,
@@ -64,26 +63,15 @@ const SignUp: React.FC<Props> = () => {
               <span className="text-purple-600">Create Your Account!</span>
             </p>
           </div>
-          <div className="flex space-x-6">
-            <Input
-              label="firstName"
-              type="text"
-              error={formik.errors.firstName}
-              touched={formik.touched.firstName}
-              value={formik.values.firstName}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <Input
-              label="lastName"
-              type="lastName"
-              error={formik.errors.lastName}
-              touched={formik.touched.lastName}
-              value={formik.values.lastName}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-          </div>
+          <Input
+            label="name"
+            type="name"
+            error={formik.errors.name}
+            touched={formik.touched.name}
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
           <Input
             label="username"
             type="text"

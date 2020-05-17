@@ -4,8 +4,7 @@ mutation SignUp($signupInput: SignUpInputType!) {
       id
       username
       email
-      firstName
-      lastName
+      name
       isSuperuser
       lastLogin
       username

@@ -10,7 +10,7 @@ interface Props {}
 const FeedItem: React.FC<Props> = () => {
   const { currentUser } = useUserContext();
   const image = getImageUrl(currentUser?.photo, "photo");
-  const { firstName, lastName } = currentUser!;
+  const { name } = currentUser!;
   return (
     <div className="space-y-2">
       <div className="flex">
@@ -20,7 +20,7 @@ const FeedItem: React.FC<Props> = () => {
           alt="user"
         />
         <div className="ml-2">
-          <h1 className="text-gray-900 font-bold tracking-wide">{`${firstName} ${lastName}`}</h1>
+          <h1 className="text-gray-900 font-bold tracking-wide">{name}</h1>
           <p className="text-xs italic">{new Date().toLocaleString()}</p>
         </div>
       </div>

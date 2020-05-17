@@ -21,6 +21,9 @@ def post_image_path(post, filename):
 
 
 class User(AbstractUser):
+    first_name = None
+    last_name = None
+    name = models.CharField(max_length=255)
     email = models.EmailField(unique=True, null=False, error_messages={
                               'unique': "Email is already taken"})
     photo = models.ImageField(

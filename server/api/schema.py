@@ -24,11 +24,10 @@ class PostType(DjangoObjectType):
 
 
 class SignUpInputType(graphene.InputObjectType):
+    name = graphene.String(required=True)
     username = graphene.String(required=True)
     password = graphene.String(required=True)
     email = graphene.String(required=True)
-    first_name = graphene.String(required=True)
-    last_name = graphene.String(required=True)
 
 
 class PostInputType(graphene.InputObjectType):
@@ -81,7 +80,7 @@ class Query(object):
 
     @login_required
     def resolve_posts(self, info, **kwargs):
-        return Post.objects.all()
+        return Post.objects.order_by('-id')
 
     @login_required
     def resolve_me(self, info, **kwargs):

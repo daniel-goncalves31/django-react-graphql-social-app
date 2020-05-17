@@ -6,7 +6,7 @@ interface Props {}
 
 const FriendsListItem: React.FC<Props> = () => {
   const { currentUser } = useUserContext();
-  const { firstName, lastName, photo } = currentUser!;
+  const { name, photo } = currentUser!;
   const image = getImageUrl(photo, "photo");
   return (
     <div className="p-2 flex hover:bg-gray-100 cursor-pointer">
@@ -16,7 +16,7 @@ const FriendsListItem: React.FC<Props> = () => {
         className="w-10 h-10 rounded-full object-center object-cover"
       />
       <div className="ml-2">
-        <h1 className="text-xs text-gray-800 font-bold">{`${firstName} ${lastName}`}</h1>
+        <h1 className="text-xs text-gray-800 font-bold">{name}</h1>
       </div>
     </div>
   );

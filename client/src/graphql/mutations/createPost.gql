@@ -7,8 +7,7 @@ mutation CreatePost($postInput: PostInputType!) {
       createdAt
       user {
         id
-        firstName
-        lastName
+        name
       }
     }
   }
