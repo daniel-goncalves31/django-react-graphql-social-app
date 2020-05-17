@@ -16,6 +16,11 @@ export type Scalars = {
    */
   DateTime: any;
   /**
+   * Create scalar that ignores normal serialization/deserialization, since
+   * that will be handled by the multipart request spec
+   */
+  Upload: any;
+  /**
    * The `GenericScalar` scalar type represents a generic
    * GraphQL scalar value that could be:
    * String, Boolean, Int, Float, List or Object.
@@ -27,6 +32,7 @@ export type Query = {
    __typename?: 'Query';
   users?: Maybe<Array<Maybe<UserType>>>;
   me?: Maybe<UserType>;
+  posts?: Maybe<Array<Maybe<PostType>>>;
 };
 
 export type UserType = {
@@ -50,9 +56,19 @@ export type UserType = {
 };
 
 
+export type PostType = {
+   __typename?: 'PostType';
+  id: Scalars['ID'];
+  user: UserType;
+  text: Scalars['String'];
+  image: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+};
+
 export type Mutation = {
    __typename?: 'Mutation';
   signup?: Maybe<SignUp>;
+  createPost?: Maybe<CreatePost>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -62,6 +78,11 @@ export type Mutation = {
 
 export type MutationSignupArgs = {
   signupInput: SignUpInputType;
+};
+
+
+export type MutationCreatePostArgs = {
+  postInput: PostInputType;
 };
 
 
@@ -93,6 +114,17 @@ export type SignUpInputType = {
   lastName: Scalars['String'];
 };
 
+export type CreatePost = {
+   __typename?: 'CreatePost';
+  post?: Maybe<PostType>;
+};
+
+export type PostInputType = {
+  text: Scalars['String'];
+  image?: Maybe<Scalars['Upload']>;
+};
+
+
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
@@ -118,6 +150,26 @@ export type DeleteJsonWebTokenCookie = {
    __typename?: 'DeleteJSONWebTokenCookie';
   deleted: Scalars['Boolean'];
 };
+
+export type CreatePostMutationVariables = {
+  postInput: PostInputType;
+};
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost?: Maybe<(
+    { __typename?: 'CreatePost' }
+    & { post?: Maybe<(
+      { __typename?: 'PostType' }
+      & Pick<PostType, 'id' | 'text' | 'image' | 'createdAt'>
+      & { user: (
+        { __typename?: 'UserType' }
+        & Pick<UserType, 'id' | 'firstName' | 'lastName'>
+      ) }
+    )> }
+  )> }
+);
 
 export type LogoutMutationVariables = {};
 
@@ -175,6 +227,48 @@ export type MeQuery = (
 );
 
 
+export const CreatePostDocument = gql`
+    mutation CreatePost($postInput: PostInputType!) {
+  createPost(postInput: $postInput) {
+    post {
+      id
+      text
+      image
+      createdAt
+      user {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
+
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      postInput: // value for 'postInput'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, baseOptions);
+      }
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout {

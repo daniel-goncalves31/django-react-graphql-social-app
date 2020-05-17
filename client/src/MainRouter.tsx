@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import Home from "./components/home/Home";
@@ -8,14 +8,15 @@ import PrivateRoute from "./components/shared/PrivateRoute";
 
 interface Props {}
 
-const Router: React.FC<Props> = () => {
+const MainRouter: React.FC<Props> = () => {
   return (
     <Switch>
-      <PrivateRoute exact path="/" component={Home} />
+      <PrivateRoute path="/home" component={Home} />
       <AuthRoute path="/login" component={Login} />
       <AuthRoute path="/signup" component={SignUp} />
+      <Redirect from="/" to="/home/create-post" exact />
     </Switch>
   );
 };
 
-export default Router;
+export default MainRouter;

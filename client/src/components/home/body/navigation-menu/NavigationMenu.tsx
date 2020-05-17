@@ -16,14 +16,14 @@ const NavigationMenu: React.FC<Props> = () => {
       <h5 className="text-gray-200 italic text-xs">
         I'm a space bound rocketship and your heart is the moon!
       </h5>
-      <ul className="flex items-center mt-1">
-        <NavigationMenuItem path="/" Icon={BsBook}>
+      <ul className="flex items-center py-1">
+        <NavigationMenuItem path="/home/feed" Icon={BsBook}>
           Feed
         </NavigationMenuItem>
-        <NavigationMenuItem path="/" Icon={AiOutlineUser}>
+        <NavigationMenuItem path="/home/profile" Icon={AiOutlineUser}>
           Profile
         </NavigationMenuItem>
-        <NavigationMenuItem path="/" Icon={RiFeedbackLine}>
+        <NavigationMenuItem path="/home/notifications" Icon={RiFeedbackLine}>
           Notifications
         </NavigationMenuItem>
       </ul>

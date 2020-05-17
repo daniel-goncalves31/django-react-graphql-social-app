@@ -16,6 +16,10 @@ def back_image_path(user, filename):
     return f"users/back_images/{new_filename}"
 
 
+def post_image_path(post, filename):
+    return f"posts/{str(post.user.id)}/{filename}"
+
+
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, error_messages={
                               'unique': "Email is already taken"})
@@ -23,3 +27,11 @@ class User(AbstractUser):
         upload_to=photo_image_path, null=True, storage=OverwriteStorage())
     back_image = models.ImageField(
         upload_to=back_image_path, null=True, storage=OverwriteStorage())
+
+
+class Post(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=1000)
+    image = models.ImageField(upload_to=post_image_path)
+    created_at = models.DateTimeField(auto_now_add=True)

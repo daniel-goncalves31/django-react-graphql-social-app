@@ -1,9 +1,9 @@
 import React from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { GoCommentDiscussion } from "react-icons/go";
-import { useUserContext } from "../../../../context/UserContext";
-import FeedImage from "../../../../images/back_image.jpg";
-import { getImageUrl } from "../../../../utils/getImageUrl";
+import { useUserContext } from "../../../../../context/UserContext";
+import FeedImage from "../../../../../images/back_image.jpg";
+import { getImageUrl } from "../../../../../utils/getImageUrl";
 
 interface Props {}
 
@@ -12,7 +12,7 @@ const FeedItem: React.FC<Props> = () => {
   const image = getImageUrl(currentUser?.photo, "photo");
   const { firstName, lastName } = currentUser!;
   return (
-    <div className="ml-4 space-y-2">
+    <div className="space-y-2">
       <div className="flex">
         <img
           className="w-16 h-16 rounded-full object-cover object-center block"

@@ -14,3 +14,8 @@
 .dropdown:hover > .dropdown-menu {
   display: block;
 }
+
+a.active {
+  color: rgb(113, 128, 150);
+  background-color: #fff;
+}

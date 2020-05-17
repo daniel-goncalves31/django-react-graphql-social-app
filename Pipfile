@@ -15,6 +15,7 @@ configparser = "*"
 pillow = "*"
 django-cors-headers = "*"
 django-graphql-jwt = "*"
+graphene-file-upload = "*"
 
 [requires]
 python_version = "3.8"

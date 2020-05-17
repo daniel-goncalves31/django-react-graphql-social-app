@@ -1,5 +1,7 @@
 import { ApolloProvider } from "@apollo/react-hooks";
-import ApolloClient from "apollo-boost";
+import { InMemoryCache } from "apollo-boost";
+import { ApolloClient } from "apollo-client";
+import { createUploadLink } from "apollo-upload-client";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
@@ -7,8 +9,11 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 const client = new ApolloClient({
-  uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
-  credentials: "include",
+  link: createUploadLink({
+    uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
+    credentials: "include",
+  }),
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.render(

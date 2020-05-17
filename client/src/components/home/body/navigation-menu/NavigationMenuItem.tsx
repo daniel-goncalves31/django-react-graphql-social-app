@@ -11,6 +11,7 @@ const NavigationMenuItem: React.FC<Props> = ({ children, Icon, path }) => {
   return (
     <li>
       <NavLink
+        exact
         className="flex items-center py-1 px-4 text-gray-200 rounded-sm cursor-pointer text-xs hover:bg-white hover:text-gray-600"
         to={path}
         style={{ lineHeight: "1px" }}
