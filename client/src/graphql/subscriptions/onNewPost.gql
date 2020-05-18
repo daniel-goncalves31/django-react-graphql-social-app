@@ -1,0 +1,13 @@
+subscription OnNewPost {
+  onNewPost {
+    id
+    text
+    image
+    createdAt
+    user {
+      id
+      name
+      photo
+    }
+  }
+}

@@ -1,23 +1,23 @@
 import imageCompression from "browser-image-compression";
 import React, { useRef, useState } from "react";
 import ImageSelectPreview from "react-image-select-pv";
+import { useHistory } from "react-router-dom";
 import { useCreatePostMutation } from "../../../../graphql/generated";
 interface Props {}
 
 const CreatePost: React.FC<Props> = () => {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const [image, setImage] = useState<File | null>(null);
+  const { push } = useHistory();
 
   const [createPost] = useCreatePostMutation();
 
   const handleImageChange = (files: any) => {
-    console.log(files);
     setImage(files[0].blob);
   };
 
   const handleOnSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(image);
     try {
       let compressedFile = null;
       if (image) {
@@ -25,17 +25,13 @@ const CreatePost: React.FC<Props> = () => {
           maxSizeMB: 1,
           maxWidthOrHeight: 1024,
         });
-        console.log(
-          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-        );
       }
-      console.log(compressedFile);
       const text = textRef.current!.value;
       const response = await createPost({
         variables: { postInput: { image: compressedFile, text } },
       });
       console.log(response);
-      setImage(null);
+      push("/home/feed");
     } catch (error) {
       if (error.networkError) console.log(error.networkError.result);
       else console.log(error);
@@ -67,7 +63,7 @@ const CreatePost: React.FC<Props> = () => {
           max={1}
           onChange={handleImageChange}
           onError={(e: any) => (e.length ? console.error(e) : null)}
-          maxImageSize={3000000}
+          maxImageSize={5000000}
           imageStyle={{
             width: "100%",
             height: "360px",

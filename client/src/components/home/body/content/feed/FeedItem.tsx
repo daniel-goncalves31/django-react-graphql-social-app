@@ -2,7 +2,6 @@ import React from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { GoCommentDiscussion } from "react-icons/go";
 import { PostType } from "../../../../../graphql/generated";
-import FeedImage from "../../../../../images/back_image.jpg";
 import { getImageUrl } from "../../../../../utils/getImageUrl";
 
 interface Props {
@@ -11,7 +10,8 @@ interface Props {
 
 const FeedItem: React.FC<Props> = ({ post }) => {
   const userPhoto = getImageUrl(post.user.photo, "photo");
-  const postImage = post.image ? getImageUrl(post.id, "photo") : null;
+  const postImage = post.image ? getImageUrl(post.image, "photo") : null;
+
   return (
     <div className="space-y-2">
       <div className="flex">
@@ -33,7 +33,7 @@ const FeedItem: React.FC<Props> = ({ post }) => {
       {postImage && (
         <img
           className="w-full object-cover object-center rounded"
-          src={FeedImage}
+          src={postImage}
           alt="post"
           style={{ maxHeight: "20rem" }}
         />

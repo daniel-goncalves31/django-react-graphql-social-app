@@ -1,4 +1,5 @@
 import React from "react";
+import { PostProvider } from "../../../context/PostContext";
 import Avatar from "./Avatar";
 import FriendsList from "./friends-list/FriendsLists";
 import NavigationMenu from "./navigation-menu/NavigationMenu";
@@ -19,7 +20,9 @@ const Body: React.FC<Props> = () => {
           <SideMenu />
         </div>
         <div className="h-full w-7/12 mx-2 px-4 py-2 rounded shadow-lg bg-white my-5 z-10">
-          <SecondaryRouter />
+          <PostProvider>
+            <SecondaryRouter />
+          </PostProvider>
         </div>
         <div className="h-full w-3/12 my-5 ml-2 z-10">
           <FriendsList />

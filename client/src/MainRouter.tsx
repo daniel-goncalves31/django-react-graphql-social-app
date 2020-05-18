@@ -14,7 +14,7 @@ const MainRouter: React.FC<Props> = () => {
       <PrivateRoute path="/home" component={Home} />
       <AuthRoute path="/login" component={Login} />
       <AuthRoute path="/signup" component={SignUp} />
-      <Redirect from="/" to="/home/feed" exact />
+      <Redirect from="/" to="/home/create-post" exact />
     </Switch>
   );
 };

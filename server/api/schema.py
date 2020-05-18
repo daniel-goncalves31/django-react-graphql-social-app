@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import HttpResponse
 from graphene_django.types import DjangoObjectType
 from graphene_file_upload.scalars import Upload
+from graphene_subscriptions.events import CREATED
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_encode, set_cookie
 
@@ -92,3 +93,15 @@ class Query(object):
 class Mutation(object):
     signup = SignUp.Field()
     create_post = CreatePost.Field()
+
+
+class Subscription(graphene.ObjectType):
+    on_new_post = graphene.Field(PostType)
+
+    def resolve_on_new_post(root, info):
+        print('@@@@@@@@@@@subscription')
+        return root.filter(
+            lambda event:
+                event.operation == CREATED and
+                isinstance(event.instance, Post)
+        ).map(lambda event: event.instance)

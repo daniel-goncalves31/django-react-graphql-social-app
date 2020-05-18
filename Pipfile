@@ -16,6 +16,9 @@ pillow = "*"
 django-cors-headers = "*"
 django-graphql-jwt = "*"
 graphene-file-upload = "*"
+channels = "*"
+graphene-subscriptions = "*"
+django-graphql-playground = "*"
 
 [requires]
 python_version = "3.8"

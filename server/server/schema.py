@@ -3,6 +3,7 @@ import graphql_jwt
 
 from api.schema import Mutation as ApiMutation
 from api.schema import Query as ApiQuery
+from api.schema import Subscription as ApiSubscription
 from api.schema import UserType
 
 
@@ -25,4 +26,9 @@ class Mutation(ApiMutation, graphene.ObjectType):
     logout = graphql_jwt.DeleteJSONWebTokenCookie.Field()
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+class Subscription(ApiSubscription, graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation,
+                         subscription=Subscription)

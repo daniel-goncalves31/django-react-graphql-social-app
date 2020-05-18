@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
-    'corsheaders'
+    'corsheaders',
+    'channels',
+    'graphene_subscriptions',
+    'graphql_playground'
 
 ]
 
@@ -198,3 +201,12 @@ GRAPHQL_JWT = {
 }
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Channels
+ASGI_APPLICATION = 'server.routing.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}

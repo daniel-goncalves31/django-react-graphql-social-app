@@ -19,11 +19,9 @@ const Login: React.FC<Props> = () => {
       const response = await login({
         variables: { username, password },
       });
-      console.log(response.data);
       if (response.data && response.data.login && response.data.login.user) {
         setCurrentUser({ ...response.data.login.user });
         toast.success("Logged successfully!");
-        console.log("submited");
       } else {
         toast.error("Something went wrong");
         console.log("error");

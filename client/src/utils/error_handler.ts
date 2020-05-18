@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-boost";
+import { ApolloError } from "apollo-client";
 import { toast } from "react-toastify";
 
 export const handleErrors = (error: ApolloError) => {

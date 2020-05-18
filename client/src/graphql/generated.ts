@@ -31,8 +31,8 @@ export type Scalars = {
 export type Query = {
    __typename?: 'Query';
   users?: Maybe<Array<Maybe<UserType>>>;
-  me?: Maybe<UserType>;
   posts?: Maybe<Array<Maybe<PostType>>>;
+  me?: Maybe<UserType>;
 };
 
 export type UserType = {
@@ -149,6 +149,11 @@ export type DeleteJsonWebTokenCookie = {
   deleted: Scalars['Boolean'];
 };
 
+export type Subscription = {
+   __typename?: 'Subscription';
+  onNewPost?: Maybe<PostType>;
+};
+
 export type CreatePostMutationVariables = {
   postInput: PostInputType;
 };
@@ -248,6 +253,21 @@ export type UsersQuery = (
     { __typename?: 'UserType' }
     & Pick<UserType, 'id' | 'name' | 'photo'>
   )>>> }
+);
+
+export type OnNewPostSubscriptionVariables = {};
+
+
+export type OnNewPostSubscription = (
+  { __typename?: 'Subscription' }
+  & { onNewPost?: Maybe<(
+    { __typename?: 'PostType' }
+    & Pick<PostType, 'id' | 'text' | 'image' | 'createdAt'>
+    & { user: (
+      { __typename?: 'UserType' }
+      & Pick<UserType, 'id' | 'name' | 'photo'>
+    ) }
+  )> }
 );
 
 
@@ -531,3 +551,39 @@ export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;
+export const OnNewPostDocument = gql`
+    subscription OnNewPost {
+  onNewPost {
+    id
+    text
+    image
+    createdAt
+    user {
+      id
+      name
+      photo
+    }
+  }
+}
+    `;
+
+/**
+ * __useOnNewPostSubscription__
+ *
+ * To run a query within a React component, call `useOnNewPostSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnNewPostSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnNewPostSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOnNewPostSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<OnNewPostSubscription, OnNewPostSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<OnNewPostSubscription, OnNewPostSubscriptionVariables>(OnNewPostDocument, baseOptions);
+      }
+export type OnNewPostSubscriptionHookResult = ReturnType<typeof useOnNewPostSubscription>;
+export type OnNewPostSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnNewPostSubscription>;
