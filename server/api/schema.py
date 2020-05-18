@@ -9,6 +9,7 @@ from graphene_subscriptions.events import CREATED
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_encode, set_cookie
 
+from .decorators import unauthenticated_user
 from .models import Post, User
 
 
@@ -71,9 +72,10 @@ class CreatePost(graphene.Mutation):
         return CreatePost(post=post)
 
 
-class Query(object):
+class Query(graphene.ObjectType):
     users = graphene.List(UserType)
-    posts = graphene.List(PostType)
+    posts = graphene.List(PostType, offset=graphene.Int(
+        required=True), limit=graphene.Int(required=True))
     me = graphene.Field(UserType)
 
     @login_required
@@ -81,8 +83,8 @@ class Query(object):
         return User.objects.exclude(id=info.context.user.id).order_by('name')
 
     @login_required
-    def resolve_posts(self, info, **kwargs):
-        return Post.objects.order_by('-id')
+    def resolve_posts(self, info, offset, limit):
+        return Post.objects.order_by('-id')[offset:(offset+limit)]
 
     @login_required
     def resolve_me(self, info, **kwargs):
@@ -90,7 +92,7 @@ class Query(object):
         return user
 
 
-class Mutation(object):
+class Mutation(graphene.ObjectType):
     signup = SignUp.Field()
     create_post = CreatePost.Field()
 
@@ -98,8 +100,8 @@ class Mutation(object):
 class Subscription(graphene.ObjectType):
     on_new_post = graphene.Field(PostType)
 
+    @unauthenticated_user
     def resolve_on_new_post(root, info):
-        print('@@@@@@@@@@@subscription')
         return root.filter(
             lambda event:
                 event.operation == CREATED and

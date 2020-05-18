@@ -6,7 +6,7 @@ import FeedItem from "./FeedItem";
 interface Props {}
 
 const Feed: React.FC<Props> = () => {
-  const { posts } = usePostContext();
+  const { posts, getMorePosts } = usePostContext();
 
   if (!posts) {
     return <p>Loading...</p>;
@@ -17,6 +17,15 @@ const Feed: React.FC<Props> = () => {
       {posts?.map((post: PostType) => (
         <FeedItem key={post?.id} post={post as any} />
       ))}
+      {
+        <button
+          type="button"
+          className="my-1 mx-auto block text-xs text-indigo-400 underline"
+          onClick={getMorePosts}
+        >
+          Load More Posts
+        </button>
+      }
     </div>
   );
 };

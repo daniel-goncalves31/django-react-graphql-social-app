@@ -35,6 +35,12 @@ export type Query = {
   me?: Maybe<UserType>;
 };
 
+
+export type QueryPostsArgs = {
+  offset: Scalars['Int'];
+  limit: Scalars['Int'];
+};
+
 export type UserType = {
    __typename?: 'UserType';
   id: Scalars['ID'];
@@ -229,7 +235,10 @@ export type MeQuery = (
   )> }
 );
 
-export type PostsQueryVariables = {};
+export type PostsQueryVariables = {
+  offset: Scalars['Int'];
+  limit: Scalars['Int'];
+};
 
 
 export type PostsQuery = (
@@ -478,8 +487,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const PostsDocument = gql`
-    query Posts {
-  posts {
+    query Posts($offset: Int!, $limit: Int!) {
+  posts(offset: $offset, limit: $limit) {
     id
     text
     image
@@ -505,6 +514,8 @@ export const PostsDocument = gql`
  * @example
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
