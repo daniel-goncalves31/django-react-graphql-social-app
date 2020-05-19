@@ -2,7 +2,7 @@ import { ApolloError } from "apollo-client";
 import { toast } from "react-toastify";
 
 export const handleErrors = (error: ApolloError) => {
-  if (error.graphQLErrors) {
+  if (error.graphQLErrors[0]) {
     if (error.graphQLErrors[0].message === "Bad Request Exception") {
       const errors_list =
         error.graphQLErrors[0].extensions?.exception.response.message;

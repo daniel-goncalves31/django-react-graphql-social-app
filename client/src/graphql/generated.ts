@@ -84,6 +84,7 @@ export type Mutation = {
   signup?: Maybe<SignUp>;
   createPost?: Maybe<CreatePost>;
   likePost?: Maybe<LikePost>;
+  dislikePost?: Maybe<DislikePost>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -103,6 +104,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationLikePostArgs = {
   postId: Scalars['ID'];
+};
+
+
+export type MutationDislikePostArgs = {
+  likeId: Scalars['ID'];
 };
 
 
@@ -147,6 +153,11 @@ export type PostInputType = {
 export type LikePost = {
    __typename?: 'LikePost';
   like?: Maybe<LikeType>;
+};
+
+export type DislikePost = {
+   __typename?: 'DislikePost';
+  disliked?: Maybe<Scalars['Boolean']>;
 };
 
 export type ObtainJsonWebToken = {
@@ -200,6 +211,19 @@ export type CreatePostMutation = (
   )> }
 );
 
+export type DislikePostMutationVariables = {
+  likeId: Scalars['ID'];
+};
+
+
+export type DislikePostMutation = (
+  { __typename?: 'Mutation' }
+  & { dislikePost?: Maybe<(
+    { __typename?: 'DislikePost' }
+    & Pick<DislikePost, 'disliked'>
+  )> }
+);
+
 export type LikePostMutationVariables = {
   postId: Scalars['ID'];
 };
@@ -211,6 +235,7 @@ export type LikePostMutation = (
     { __typename?: 'LikePost' }
     & { like?: Maybe<(
       { __typename?: 'LikeType' }
+      & Pick<LikeType, 'id'>
       & { user: (
         { __typename?: 'UserType' }
         & Pick<UserType, 'id' | 'name'>
@@ -290,6 +315,7 @@ export type PostsQuery = (
       & Pick<UserType, 'id' | 'name' | 'photo'>
     ), likeSet: Array<(
       { __typename?: 'LikeType' }
+      & Pick<LikeType, 'id'>
       & { user: (
         { __typename?: 'UserType' }
         & Pick<UserType, 'id' | 'name'>
@@ -366,10 +392,43 @@ export function useCreatePostMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const DislikePostDocument = gql`
+    mutation DislikePost($likeId: ID!) {
+  dislikePost(likeId: $likeId) {
+    disliked
+  }
+}
+    `;
+export type DislikePostMutationFn = ApolloReactCommon.MutationFunction<DislikePostMutation, DislikePostMutationVariables>;
+
+/**
+ * __useDislikePostMutation__
+ *
+ * To run a mutation, you first call `useDislikePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDislikePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dislikePostMutation, { data, loading, error }] = useDislikePostMutation({
+ *   variables: {
+ *      likeId: // value for 'likeId'
+ *   },
+ * });
+ */
+export function useDislikePostMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DislikePostMutation, DislikePostMutationVariables>) {
+        return ApolloReactHooks.useMutation<DislikePostMutation, DislikePostMutationVariables>(DislikePostDocument, baseOptions);
+      }
+export type DislikePostMutationHookResult = ReturnType<typeof useDislikePostMutation>;
+export type DislikePostMutationResult = ApolloReactCommon.MutationResult<DislikePostMutation>;
+export type DislikePostMutationOptions = ApolloReactCommon.BaseMutationOptions<DislikePostMutation, DislikePostMutationVariables>;
 export const LikePostDocument = gql`
     mutation LikePost($postId: ID!) {
   likePost(postId: $postId) {
     like {
+      id
       user {
         id
         name
@@ -581,6 +640,7 @@ export const PostsDocument = gql`
       photo
     }
     likeSet {
+      id
       user {
         id
         name

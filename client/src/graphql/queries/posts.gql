@@ -10,6 +10,7 @@ query Posts($offset: Int!, $limit: Int!) {
       photo
     }
     likeSet {
+      id
       user {
         id
         name

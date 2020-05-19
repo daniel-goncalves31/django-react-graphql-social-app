@@ -1,6 +1,7 @@
 mutation LikePost($postId: ID!) {
   likePost(postId: $postId) {
     like {
+      id
       user {
         id
         name

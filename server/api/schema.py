@@ -7,7 +7,6 @@ from graphene_subscriptions.events import CREATED
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_encode, set_cookie
 
-from .decorators import unauthenticated_user
 from .models import Like, Post, User
 
 
@@ -97,6 +96,24 @@ class LikePost(graphene.Mutation):
         return LikePost(like)
 
 
+class DislikePost(graphene.Mutation):
+
+    class Arguments:
+        like_id = graphene.ID(required=True)
+
+    disliked = graphene.Boolean()
+
+    @login_required
+    def mutate(self, info, like_id):
+        like = Like.objects.get(id=like_id)
+
+        if like.user.id != info.context.user.id:
+            raise ValueError("User and like owner aren't the same")
+
+        like.delete()
+        return DislikePost(disliked=True)
+
+
 class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     posts = graphene.List(PostType, offset=graphene.Int(
@@ -120,6 +137,7 @@ class Mutation(graphene.ObjectType):
     signup = SignUp.Field()
     create_post = CreatePost.Field()
     like_post = LikePost.Field()
+    dislike_post = DislikePost.Field()
 
 
 class Subscription(graphene.ObjectType):

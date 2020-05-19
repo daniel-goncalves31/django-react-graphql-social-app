@@ -6,7 +6,7 @@ interface Props {
   currentUserId: string;
 }
 
-const Likes: React.FC<Props> = ({ likes, currentUserId }) => {
+const LikedBy: React.FC<Props> = ({ likes, currentUserId }) => {
   const getLikes = () => {
     if (!likes.length) {
       return "";
@@ -25,4 +25,4 @@ const Likes: React.FC<Props> = ({ likes, currentUserId }) => {
   return <div className="w-full text-xs text-gray-500">{getLikes()}</div>;
 };
 
-export default Likes;
+export default LikedBy;
