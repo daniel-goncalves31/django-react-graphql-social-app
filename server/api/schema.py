@@ -1,5 +1,3 @@
-import logging
-
 import graphene
 from django.contrib.auth import authenticate, login
 from django.shortcuts import HttpResponse
@@ -10,19 +8,27 @@ from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_encode, set_cookie
 
 from .decorators import unauthenticated_user
-from .models import Post, User
+from .models import Like, Post, User
 
 
+# Types
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        exclude = ['password', 'post_set']
+        exclude = ['password', 'post_set', 'like_set']
 
 
 class PostType(DjangoObjectType):
     class Meta:
         model = Post
         fields = '__all__'
+
+
+class LikeType(DjangoObjectType):
+    class Meta:
+        model = Like
+
+# Inputs Types
 
 
 class SignUpInputType(graphene.InputObjectType):
@@ -35,6 +41,8 @@ class SignUpInputType(graphene.InputObjectType):
 class PostInputType(graphene.InputObjectType):
     text = graphene.String(required=True)
     image = Upload(required=False)
+
+# Mutations
 
 
 class SignUp(graphene.Mutation):
@@ -72,6 +80,23 @@ class CreatePost(graphene.Mutation):
         return CreatePost(post=post)
 
 
+class LikePost(graphene.Mutation):
+
+    class Arguments:
+        post_id = graphene.ID(required=True)
+
+    like = graphene.Field(LikeType)
+
+    @login_required
+    def mutate(self, info, post_id):
+        user = info.context.user
+        post = Post.objects.get(id=post_id)
+        like = Like(user=user, post=post)
+        like.save()
+
+        return LikePost(like)
+
+
 class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     posts = graphene.List(PostType, offset=graphene.Int(
@@ -82,7 +107,6 @@ class Query(graphene.ObjectType):
     def resolve_users(self, info, **kwargs):
         return User.objects.exclude(id=info.context.user.id).order_by('name')
 
-    @login_required
     def resolve_posts(self, info, offset, limit):
         return Post.objects.order_by('-id')[offset:(offset+limit)]
 
@@ -95,12 +119,12 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     signup = SignUp.Field()
     create_post = CreatePost.Field()
+    like_post = LikePost.Field()
 
 
 class Subscription(graphene.ObjectType):
     on_new_post = graphene.Field(PostType)
 
-    @unauthenticated_user
     def resolve_on_new_post(root, info):
         return root.filter(
             lambda event:

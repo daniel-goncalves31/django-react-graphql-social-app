@@ -23,7 +23,7 @@ class GraphQLCustomCoreBackend(GraphQLCoreBackend):
 
 
 config = RawConfigParser()
-config.read(os.path.join(BASE_DIR, 'config.ini'))
+config.read(os.path.join(settings.BASE_DIR, 'config.ini'))
 
 urlpatterns = [
     path('admin/', admin.site.urls),

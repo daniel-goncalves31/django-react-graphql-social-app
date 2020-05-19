@@ -19,12 +19,12 @@ const Body: React.FC<Props> = () => {
         <div className="h-full w-2/12 p-2">
           <SideMenu />
         </div>
-        <div className="h-full w-7/12 mx-2 px-4 py-2 rounded shadow-lg bg-white my-5 z-10">
+        <div className="h-full w-8/12 mx-2 px-4 py-2 rounded shadow-lg bg-white my-5 z-10">
           <PostProvider>
             <SecondaryRouter />
           </PostProvider>
         </div>
-        <div className="h-full w-3/12 my-5 ml-2 z-10">
+        <div className="h-full w-2/12 my-5 ml-2 z-10">
           <FriendsList />
         </div>
       </div>

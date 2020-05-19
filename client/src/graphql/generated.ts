@@ -68,12 +68,22 @@ export type PostType = {
   text: Scalars['String'];
   image?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+  likeSet: Array<LikeType>;
+};
+
+export type LikeType = {
+   __typename?: 'LikeType';
+  id: Scalars['ID'];
+  user: UserType;
+  post: PostType;
+  createdAt: Scalars['DateTime'];
 };
 
 export type Mutation = {
    __typename?: 'Mutation';
   signup?: Maybe<SignUp>;
   createPost?: Maybe<CreatePost>;
+  likePost?: Maybe<LikePost>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -88,6 +98,11 @@ export type MutationSignupArgs = {
 
 export type MutationCreatePostArgs = {
   postInput: PostInputType;
+};
+
+
+export type MutationLikePostArgs = {
+  postId: Scalars['ID'];
 };
 
 
@@ -128,6 +143,11 @@ export type PostInputType = {
   image?: Maybe<Scalars['Upload']>;
 };
 
+
+export type LikePost = {
+   __typename?: 'LikePost';
+  like?: Maybe<LikeType>;
+};
 
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
@@ -172,6 +192,25 @@ export type CreatePostMutation = (
     & { post?: Maybe<(
       { __typename?: 'PostType' }
       & Pick<PostType, 'id' | 'text' | 'image' | 'createdAt'>
+      & { user: (
+        { __typename?: 'UserType' }
+        & Pick<UserType, 'id' | 'name'>
+      ) }
+    )> }
+  )> }
+);
+
+export type LikePostMutationVariables = {
+  postId: Scalars['ID'];
+};
+
+
+export type LikePostMutation = (
+  { __typename?: 'Mutation' }
+  & { likePost?: Maybe<(
+    { __typename?: 'LikePost' }
+    & { like?: Maybe<(
+      { __typename?: 'LikeType' }
       & { user: (
         { __typename?: 'UserType' }
         & Pick<UserType, 'id' | 'name'>
@@ -249,7 +288,13 @@ export type PostsQuery = (
     & { user: (
       { __typename?: 'UserType' }
       & Pick<UserType, 'id' | 'name' | 'photo'>
-    ) }
+    ), likeSet: Array<(
+      { __typename?: 'LikeType' }
+      & { user: (
+        { __typename?: 'UserType' }
+        & Pick<UserType, 'id' | 'name'>
+      ) }
+    )> }
   )>>> }
 );
 
@@ -321,6 +366,43 @@ export function useCreatePostMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const LikePostDocument = gql`
+    mutation LikePost($postId: ID!) {
+  likePost(postId: $postId) {
+    like {
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+export type LikePostMutationFn = ApolloReactCommon.MutationFunction<LikePostMutation, LikePostMutationVariables>;
+
+/**
+ * __useLikePostMutation__
+ *
+ * To run a mutation, you first call `useLikePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likePostMutation, { data, loading, error }] = useLikePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useLikePostMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LikePostMutation, LikePostMutationVariables>) {
+        return ApolloReactHooks.useMutation<LikePostMutation, LikePostMutationVariables>(LikePostDocument, baseOptions);
+      }
+export type LikePostMutationHookResult = ReturnType<typeof useLikePostMutation>;
+export type LikePostMutationResult = ApolloReactCommon.MutationResult<LikePostMutation>;
+export type LikePostMutationOptions = ApolloReactCommon.BaseMutationOptions<LikePostMutation, LikePostMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout {
@@ -497,6 +579,12 @@ export const PostsDocument = gql`
       id
       name
       photo
+    }
+    likeSet {
+      user {
+        id
+        name
+      }
     }
   }
 }

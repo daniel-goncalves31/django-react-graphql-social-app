@@ -1,16 +1,45 @@
-import React from "react";
-import { FiThumbsUp } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { GoCommentDiscussion } from "react-icons/go";
-import { PostType } from "../../../../../graphql/generated";
+import { useUserContext } from "../../../../../context/UserContext";
+import {
+  LikeType,
+  PostType,
+  useLikePostMutation,
+} from "../../../../../graphql/generated";
+import { handleErrors } from "../../../../../utils/error_handler";
 import { getImageUrl } from "../../../../../utils/getImageUrl";
+import Likes from "./Likes";
 
 interface Props {
   post: PostType;
 }
 
 const FeedItem: React.FC<Props> = ({ post }) => {
+  const { currentUser } = useUserContext();
+  const [likePost] = useLikePostMutation();
+
+  const [likes, setLikes] = useState<LikeType[]>([]);
+
   const userPhoto = getImageUrl(post.user.photo, "photo");
   const postImage = post.image ? getImageUrl(post.image, "photo") : null;
+
+  useEffect(() => {
+    setLikes([...post.likeSet]);
+  }, [post]);
+
+  const handleLikePost = async () => {
+    try {
+      const { data } = await likePost({ variables: { postId: post.id } });
+      if (data?.likePost?.like) {
+        setLikes((prevLikes) => [...prevLikes, data?.likePost?.like as any]);
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const alreadyLiked = likes.find((like) => like.user.id === currentUser?.id);
 
   return (
     <div className="space-y-2">
@@ -38,15 +67,29 @@ const FeedItem: React.FC<Props> = ({ post }) => {
           style={{ maxHeight: "20rem" }}
         />
       )}
+      <Likes likes={likes} currentUserId={currentUser?.id!} />
       <div className="flex justify-end p-2 space-x-6">
-        <button
-          type="button"
-          className="flex items-center outline-none bg-transparent text-indigo-400 text-xs hover:text-indigo-600"
-          style={{ lineHeight: "1px" }}
-        >
-          <FiThumbsUp className="mr-1" />
-          Like
-        </button>
+        {alreadyLiked ? (
+          <button
+            type="button"
+            className="flex items-center outline-none bg-transparent text-red-400 text-xs hover:text-red-600"
+            style={{ lineHeight: "1px" }}
+            onClick={handleLikePost}
+          >
+            <FiThumbsDown className="mr-1" />
+            Dislike
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="flex items-center outline-none bg-transparent text-indigo-400 text-xs hover:text-indigo-600"
+            style={{ lineHeight: "1px" }}
+            onClick={handleLikePost}
+          >
+            <FiThumbsUp className="mr-1" />
+            Like
+          </button>
+        )}
         <button
           type="button"
           className="flex items-center outline-none bg-transparent text-gray-600 text-xs hover:text-gray-800"
@@ -61,4 +104,4 @@ const FeedItem: React.FC<Props> = ({ post }) => {
   );
 };
 
-export default FeedItem;
+export default React.memo(FeedItem);
