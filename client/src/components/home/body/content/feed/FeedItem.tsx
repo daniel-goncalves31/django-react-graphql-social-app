@@ -3,8 +3,9 @@ import { GoCommentDiscussion } from "react-icons/go";
 import { useUserContext } from "../../../../../context/UserContext";
 import { LikeType, PostType } from "../../../../../graphql/generated";
 import { getImageUrl } from "../../../../../utils/getImageUrl";
-import LikeButtons from "./LikeButtons";
-import LikedBy from "./LikedBy";
+import Comments from "./comments/Comments";
+import LikeButtons from "./likes/LikeButtons";
+import LikedBy from "./likes/LikedBy";
 
 interface Props {
   post: PostType;
@@ -14,6 +15,7 @@ const FeedItem: React.FC<Props> = ({ post }) => {
   const { currentUser } = useUserContext();
 
   const [likes, setLikes] = useState<LikeType[]>([]);
+  const [showComments, setShowComments] = useState(true);
 
   const userPhoto = getImageUrl(post.user.photo, "photo");
   const postImage = post.image ? getImageUrl(post.image, "photo") : null;
@@ -58,13 +60,15 @@ const FeedItem: React.FC<Props> = ({ post }) => {
         />
         <button
           type="button"
-          className="flex items-center outline-none bg-transparent text-gray-600 text-xs hover:text-gray-800"
+          className="flex items-center bg-transparent text-gray-600 text-xs hover:text-gray-800 focus:outline-none"
           style={{ lineHeight: "1px" }}
+          onClick={() => setShowComments((prev) => !prev)}
         >
           <GoCommentDiscussion className="mr-1" />
           Comment
         </button>
       </div>
+      {showComments && <Comments currentUser={currentUser!} postId={post.id} />}
       <hr />
     </div>
   );

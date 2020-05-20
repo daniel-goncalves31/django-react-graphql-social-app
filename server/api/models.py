@@ -48,3 +48,27 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ['user', 'post']
+
+
+class Comment(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = models.CharField(max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Notification(models.Model):
+
+    NOTIFICATION_TYPES = [
+        ('marked in post', 'marked in post')
+    ]
+
+    id = models.AutoField(primary_key=True)
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='senders')
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='receivers')
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    readed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

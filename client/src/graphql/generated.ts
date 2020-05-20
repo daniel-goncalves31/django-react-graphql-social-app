@@ -85,6 +85,7 @@ export type Mutation = {
   createPost?: Maybe<CreatePost>;
   likePost?: Maybe<LikePost>;
   dislikePost?: Maybe<DislikePost>;
+  createComment?: Maybe<CreateComment>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -109,6 +110,11 @@ export type MutationLikePostArgs = {
 
 export type MutationDislikePostArgs = {
   likeId: Scalars['ID'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  commentInput: CommentInputType;
 };
 
 
@@ -160,6 +166,17 @@ export type DislikePost = {
   disliked?: Maybe<Scalars['Boolean']>;
 };
 
+export type CreateComment = {
+   __typename?: 'CreateComment';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
+export type CommentInputType = {
+  text: Scalars['String'];
+  postId: Scalars['ID'];
+  usersMarked: Array<Maybe<Scalars['ID']>>;
+};
+
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
@@ -189,7 +206,30 @@ export type DeleteJsonWebTokenCookie = {
 export type Subscription = {
    __typename?: 'Subscription';
   onNewPost?: Maybe<PostType>;
+  onNewComment?: Maybe<CommentType>;
 };
+
+export type CommentType = {
+   __typename?: 'CommentType';
+  id: Scalars['ID'];
+  user: UserType;
+  post: PostType;
+  text: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+};
+
+export type CreateCommentMutationVariables = {
+  commentInput: CommentInputType;
+};
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment?: Maybe<(
+    { __typename?: 'CreateComment' }
+    & Pick<CreateComment, 'ok'>
+  )> }
+);
 
 export type CreatePostMutationVariables = {
   postInput: PostInputType;
@@ -351,6 +391,38 @@ export type OnNewPostSubscription = (
 );
 
 
+export const CreateCommentDocument = gql`
+    mutation CreateComment($commentInput: CommentInputType!) {
+  createComment(commentInput: $commentInput) {
+    ok
+  }
+}
+    `;
+export type CreateCommentMutationFn = ApolloReactCommon.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      commentInput: // value for 'commentInput'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, baseOptions);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = ApolloReactCommon.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($postInput: PostInputType!) {
   createPost(postInput: $postInput) {

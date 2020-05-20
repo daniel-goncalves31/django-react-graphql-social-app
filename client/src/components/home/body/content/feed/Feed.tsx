@@ -1,3 +1,4 @@
+import "emoji-mart/css/emoji-mart.css";
 import React from "react";
 import { usePostContext } from "../../../../../context/PostContext";
 import { PostType } from "../../../../../graphql/generated";

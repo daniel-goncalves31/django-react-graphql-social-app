@@ -1,5 +1,5 @@
 import React from "react";
-import { LikeType } from "../../../../../graphql/generated";
+import { LikeType } from "../../../../../../graphql/generated";
 
 interface Props {
   likes: LikeType[];

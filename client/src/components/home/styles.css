@@ -19,3 +19,34 @@ a.active {
   color: rgb(113, 128, 150);
   background-color: #f7fafc;
 }
+
+a:focus,
+input:focus,
+button:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* .comments-textarea__input {
+  background-color: #e8e8ea;
+  padding: 9px;
+} */
+
+.comments-textarea__highlighter {
+  padding: 4px 0;
+  background-color: red;
+}
+.comments-textarea__suggestions__list {
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 12px;
+  max-height: 200px;
+  overflow: auto;
+}
+.comments-textarea__suggestions__item {
+  padding: 5px 15px;
+  border-bottom: 1px solid #eee;
+}
+.comments-textarea__suggestions__item — focused {
+  background-color: #ddd;
+}

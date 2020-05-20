@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Post, User
+from .models import Comment, Like, Notification, Post, User
 
 # Add photo field to the admin user panel
 fieldsets = list(UserAdmin.fieldsets)
@@ -20,3 +20,6 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post)
+admin.site.register(Like)
+admin.site.register(Comment)
+admin.site.register(Notification)

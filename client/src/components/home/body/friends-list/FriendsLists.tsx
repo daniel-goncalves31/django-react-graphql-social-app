@@ -22,7 +22,7 @@ const FriendsList: React.FC<Props> = () => {
         <GoSearch className="mr-2" />
         <input
           type="text"
-          className="outline-none py-2 text-gray-700"
+          className="w-full py-2 outline-none text-gray-700"
           placeholder="search friend..."
         />
       </div>

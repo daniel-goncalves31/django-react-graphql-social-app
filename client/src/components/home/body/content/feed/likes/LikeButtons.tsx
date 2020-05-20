@@ -4,8 +4,8 @@ import {
   LikeType,
   useDislikePostMutation,
   useLikePostMutation,
-} from "../../../../../graphql/generated";
-import { handleErrors } from "../../../../../utils/error_handler";
+} from "../../../../../../graphql/generated";
+import { handleErrors } from "../../../../../../utils/error_handler";
 
 interface Props {
   likes: LikeType[];
@@ -58,7 +58,7 @@ const LikeButtons: React.FC<Props> = ({
       {currentUserLike ? (
         <button
           type="button"
-          className="flex items-center outline-none bg-transparent text-red-400 text-xs hover:text-red-600"
+          className="flex items-center outline-none bg-transparent text-red-400 text-xs hover:text-red-600 focus:outline-none"
           style={{ lineHeight: "1px" }}
           onClick={handleDislikePost}
         >
@@ -68,7 +68,7 @@ const LikeButtons: React.FC<Props> = ({
       ) : (
         <button
           type="button"
-          className="flex items-center outline-none bg-transparent text-indigo-400 text-xs hover:text-indigo-600"
+          className="flex items-center outline-none bg-transparent text-indigo-400 text-xs hover:text-indigo-600 focus:outline-none"
           style={{ lineHeight: "1px" }}
           onClick={handleLikePost}
         >
