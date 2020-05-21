@@ -30,6 +30,7 @@
     "react-icons": "^3.10.0",
     "react-image-select-pv": "^2.2.1",
     "react-mentions": "^3.3.1",
+    "react-process-string": "^1.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.4",

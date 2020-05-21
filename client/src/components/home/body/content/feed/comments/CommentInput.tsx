@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mention, MentionsInput } from "react-mentions";
+import { useAllUsersContext } from "../../../../../../context/AllUsersContext";
 import { useCreateCommentMutation } from "../../../../../../graphql/generated";
 import { handleErrors } from "../../../../../../utils/error_handler";
 import EmojiPicker from "./EmojiPicker";
@@ -12,7 +13,9 @@ let markedUsers: { id: string; display: string }[] = [];
 
 const CommentInput: React.FC<Props> = ({ postId }) => {
   const [comment, setComment] = useState("");
-  const [createComment] = useCreateCommentMutation();
+  const [createComment, { loading }] = useCreateCommentMutation();
+
+  const { allUsers } = useAllUsersContext();
 
   const handleonKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -28,7 +31,7 @@ const CommentInput: React.FC<Props> = ({ postId }) => {
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!comment) return;
+    if (!comment || loading) return;
 
     let markedUsersId: string[] = [];
 
@@ -39,12 +42,12 @@ const CommentInput: React.FC<Props> = ({ postId }) => {
     markedUsersId = Array.from(new Set([...markedUsersId]));
 
     try {
-      const res = await createComment({
+      await createComment({
         variables: {
           commentInput: { postId, text: comment, usersMarked: markedUsersId },
         },
       });
-      console.log(res);
+      setComment("");
     } catch (error) {
       handleErrors(error);
     }
@@ -65,15 +68,15 @@ const CommentInput: React.FC<Props> = ({ postId }) => {
           style={{ width: 566.67, maxWidth: 566.67 }}
           placeholder="Comment..."
           onKeyPress={handleonKeyPress}
+          disabled={loading}
         >
           <Mention
             trigger="@"
-            displayTransform={(id, display) => `@${display}`}
+            displayTransform={(_, display) => `@${display}`}
             style={{ color: "#326aca", fontWeight: "bold" }}
-            data={[
-              { id: 3, display: "Bob William" },
-              { id: 5, display: "Kate Lee" },
-            ]}
+            data={
+              allUsers?.map(({ id, username }) => ({ id, display: username }))!
+            }
             onAdd={(id, display) =>
               markedUsers.push({ id: id as any, display })
             }
