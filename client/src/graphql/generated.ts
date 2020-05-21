@@ -224,6 +224,11 @@ export type Subscription = {
   onNewComment?: Maybe<CommentType>;
 };
 
+
+export type SubscriptionOnNewCommentArgs = {
+  postId: Scalars['ID'];
+};
+
 export type CreateCommentMutationVariables = {
   commentInput: CommentInputType;
 };
@@ -398,6 +403,23 @@ export type UsersQuery = (
   )>>> }
 );
 
+export type OnNewCommentSubscriptionVariables = {
+  postId: Scalars['ID'];
+};
+
+
+export type OnNewCommentSubscription = (
+  { __typename?: 'Subscription' }
+  & { onNewComment?: Maybe<(
+    { __typename?: 'CommentType' }
+    & Pick<CommentType, 'id' | 'text' | 'createdAt'>
+    & { user: (
+      { __typename?: 'UserType' }
+      & Pick<UserType, 'id' | 'name' | 'photo'>
+    ) }
+  )> }
+);
+
 export type OnNewPostSubscriptionVariables = {};
 
 
@@ -409,7 +431,14 @@ export type OnNewPostSubscription = (
     & { user: (
       { __typename?: 'UserType' }
       & Pick<UserType, 'id' | 'name' | 'photo'>
-    ) }
+    ), likeSet: Array<(
+      { __typename?: 'LikeType' }
+      & Pick<LikeType, 'id'>
+      & { user: (
+        { __typename?: 'UserType' }
+        & Pick<UserType, 'id' | 'name'>
+      ) }
+    )> }
   )> }
 );
 
@@ -845,6 +874,42 @@ export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;
+export const OnNewCommentDocument = gql`
+    subscription onNewComment($postId: ID!) {
+  onNewComment(postId: $postId) {
+    id
+    user {
+      id
+      name
+      photo
+    }
+    text
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useOnNewCommentSubscription__
+ *
+ * To run a query within a React component, call `useOnNewCommentSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnNewCommentSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnNewCommentSubscription({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useOnNewCommentSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<OnNewCommentSubscription, OnNewCommentSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<OnNewCommentSubscription, OnNewCommentSubscriptionVariables>(OnNewCommentDocument, baseOptions);
+      }
+export type OnNewCommentSubscriptionHookResult = ReturnType<typeof useOnNewCommentSubscription>;
+export type OnNewCommentSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnNewCommentSubscription>;
 export const OnNewPostDocument = gql`
     subscription OnNewPost {
   onNewPost {
@@ -856,6 +921,13 @@ export const OnNewPostDocument = gql`
       id
       name
       photo
+    }
+    likeSet {
+      id
+      user {
+        id
+        name
+      }
     }
   }
 }

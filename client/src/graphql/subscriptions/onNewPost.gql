@@ -9,5 +9,12 @@ subscription OnNewPost {
       name
       photo
     }
+    likeSet {
+      id
+      user {
+        id
+        name
+      }
+    }
   }
 }

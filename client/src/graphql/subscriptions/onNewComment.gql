@@ -1,0 +1,12 @@
+subscription onNewComment($postId: ID!) {
+  onNewComment(postId: $postId) {
+    id
+    user {
+      id
+      name
+      photo
+    }
+    text
+    createdAt
+  }
+}

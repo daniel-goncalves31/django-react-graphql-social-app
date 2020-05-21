@@ -191,18 +191,21 @@ class Mutation(graphene.ObjectType):
 
 class Subscription(graphene.ObjectType):
     on_new_post = graphene.Field(PostType)
-    on_new_comment = graphene.Field(CommentType)
+    on_new_comment = graphene.Field(
+        CommentType, post_id=graphene.ID(required=True))
 
     def resolve_on_new_post(root, info):
         return root.filter(
             lambda event:
                 event.operation == CREATED and
                 isinstance(event.instance, Post)
-        ).map(lambda event: event.instance)
+        ).map(lambda event: event.instance)[0]
 
-    def resolve_on_new_comment(root, info):
+    def resolve_on_new_comment(root, info, post_id):
+        post = Post.objects.get(id=post_id)
         return root.filter(
             lambda event:
                 event.operation == CREATED and
-                isinstance(event.instance, Comment)
-        ).map(lambda event: event.instance)
+                isinstance(event.instance, Comment) and
+                event.instance.post == post
+        ).map(lambda event: event.instance)[0]
