@@ -159,6 +159,7 @@ class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     posts = graphene.List(PostType, offset=graphene.Int(
         required=True), limit=graphene.Int(required=True))
+    comments = graphene.List(CommentType, post_id=graphene.ID(required=True))
     me = graphene.Field(UserType)
 
     @login_required
@@ -168,6 +169,11 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_posts(self, info, offset, limit):
         return Post.objects.order_by('-id')[offset:(offset+limit)]
+
+    @login_required
+    def resolve_comments(self, info, post_id):
+        post = Post.objects.get(id=post_id)
+        return Comment.objects.filter(post=post).order_by('-id')
 
     @login_required
     def resolve_me(self, info, **kwargs):

@@ -32,6 +32,7 @@ export type Query = {
    __typename?: 'Query';
   users?: Maybe<Array<Maybe<UserType>>>;
   posts?: Maybe<Array<Maybe<PostType>>>;
+  comments?: Maybe<Array<Maybe<CommentType>>>;
   me?: Maybe<UserType>;
 };
 
@@ -39,6 +40,11 @@ export type Query = {
 export type QueryPostsArgs = {
   offset: Scalars['Int'];
   limit: Scalars['Int'];
+};
+
+
+export type QueryCommentsArgs = {
+  postId: Scalars['ID'];
 };
 
 export type UserType = {
@@ -76,6 +82,15 @@ export type LikeType = {
   id: Scalars['ID'];
   user: UserType;
   post: PostType;
+  createdAt: Scalars['DateTime'];
+};
+
+export type CommentType = {
+   __typename?: 'CommentType';
+  id: Scalars['ID'];
+  user: UserType;
+  post: PostType;
+  text: Scalars['String'];
   createdAt: Scalars['DateTime'];
 };
 
@@ -209,15 +224,6 @@ export type Subscription = {
   onNewComment?: Maybe<CommentType>;
 };
 
-export type CommentType = {
-   __typename?: 'CommentType';
-  id: Scalars['ID'];
-  user: UserType;
-  post: PostType;
-  text: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-};
-
 export type CreateCommentMutationVariables = {
   commentInput: CommentInputType;
 };
@@ -326,6 +332,23 @@ export type SignUpMutation = (
       & Pick<UserType, 'id' | 'username' | 'email' | 'name' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
+);
+
+export type CommentsQueryVariables = {
+  postId: Scalars['ID'];
+};
+
+
+export type CommentsQuery = (
+  { __typename?: 'Query' }
+  & { comments?: Maybe<Array<Maybe<(
+    { __typename?: 'CommentType' }
+    & Pick<CommentType, 'id' | 'text' | 'createdAt'>
+    & { user: (
+      { __typename?: 'UserType' }
+      & Pick<UserType, 'id' | 'name' | 'photo'>
+    ) }
+  )>>> }
 );
 
 export type MeQueryVariables = {};
@@ -656,6 +679,46 @@ export function useSignUpMutation(baseOptions?: ApolloReactHooks.MutationHookOpt
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = ApolloReactCommon.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = ApolloReactCommon.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const CommentsDocument = gql`
+    query Comments($postId: ID!) {
+  comments(postId: $postId) {
+    id
+    user {
+      id
+      name
+      photo
+    }
+    text
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useCommentsQuery__
+ *
+ * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useCommentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
+        return ApolloReactHooks.useQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, baseOptions);
+      }
+export function useCommentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, baseOptions);
+        }
+export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
+export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
+export type CommentsQueryResult = ApolloReactCommon.QueryResult<CommentsQuery, CommentsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

@@ -3,7 +3,7 @@ import { GoCommentDiscussion } from "react-icons/go";
 import { useUserContext } from "../../../../../context/UserContext";
 import { LikeType, PostType } from "../../../../../graphql/generated";
 import { getImageUrl } from "../../../../../utils/getImageUrl";
-import Comments from "./comments/Comments";
+import CommentsContainer from "./comments/CommentsContainer";
 import LikeButtons from "./likes/LikeButtons";
 import LikedBy from "./likes/LikedBy";
 
@@ -68,8 +68,10 @@ const FeedItem: React.FC<Props> = ({ post }) => {
           Comment
         </button>
       </div>
-      {showComments && <Comments currentUser={currentUser!} postId={post.id} />}
-      <hr />
+      {showComments && (
+        <CommentsContainer currentUser={currentUser!} postId={post.id} />
+      )}
+      <hr className="mt-2" />
     </div>
   );
 };
