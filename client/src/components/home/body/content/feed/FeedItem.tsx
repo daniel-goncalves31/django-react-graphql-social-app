@@ -15,7 +15,7 @@ const FeedItem: React.FC<Props> = ({ post }) => {
   const { currentUser } = useUserContext();
 
   const [likes, setLikes] = useState<LikeType[]>([]);
-  const [showComments, setShowComments] = useState(true);
+  const [showComments, setShowComments] = useState(false);
 
   const userPhoto = getImageUrl(post.user.photo, "photo");
   const postImage = post.image ? getImageUrl(post.image, "photo") : null;

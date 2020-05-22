@@ -50,3 +50,8 @@ textarea:focus {
 .comments-textarea__suggestions__item — focused {
   background-color: #ddd;
 }
+
+.chat-active {
+  width: 20rem;
+  transform: translateY(calc(2rem - 100%));
+}
