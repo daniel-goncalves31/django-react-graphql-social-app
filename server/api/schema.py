@@ -1,5 +1,6 @@
 import graphene
 from django.contrib.auth import authenticate, login
+from django.db.models import Q
 from django.shortcuts import HttpResponse
 from graphene_django.types import DjangoObjectType
 from graphene_file_upload.scalars import Upload
@@ -7,7 +8,7 @@ from graphene_subscriptions.events import CREATED
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_encode, set_cookie
 
-from .models import Comment, Like, Notification, Post, User
+from .models import Chat, Comment, Like, Message, Notification, Post, User
 
 
 # Types
@@ -15,7 +16,7 @@ class UserType(DjangoObjectType):
     class Meta:
         model = User
         exclude = ['password', 'post_set', 'like_set',
-                   'comment_set', 'notification_set', 'senders', 'receivers']
+                   'comment_set', 'notification_set', 'senders', 'receivers', 'message_set']
 
 
 class PostType(DjangoObjectType):
@@ -37,6 +38,11 @@ class CommentType(DjangoObjectType):
 class NotificationGQLType(DjangoObjectType):
     class Meta:
         model = Notification
+
+
+class MessageType(DjangoObjectType):
+    class Meta:
+        model = Message
 
 # Inputs Types
 
@@ -161,6 +167,8 @@ class Query(graphene.ObjectType):
         required=True), limit=graphene.Int(required=True))
     comments = graphene.List(CommentType, post_id=graphene.ID(required=True))
     me = graphene.Field(UserType)
+    chat_messages = graphene.List(
+        MessageType, user_id=graphene.ID(required=True))
 
     @login_required
     def resolve_users(self, info, **kwargs):
@@ -179,6 +187,24 @@ class Query(graphene.ObjectType):
     def resolve_me(self, info, **kwargs):
         user = info.context.user
         return user
+
+    @login_required
+    def resolve_chat_messages(self, info, user_id):
+        current_user = info.context.user
+        other_user = User.objects.get(id=user_id)
+
+        chat = Chat.objects.filter(
+            user_one=current_user, user_two=other_user) | Chat.objects.filter(
+            user_one=other_user, user_two=current_user)
+
+        if not chat:
+            chat = Chat(user_one=current_user, user_two=other_user)
+            chat.save()
+            return []
+
+        chat = chat[0]
+
+        return Message.objects.filter(chat=chat)
 
 
 class Mutation(graphene.ObjectType):

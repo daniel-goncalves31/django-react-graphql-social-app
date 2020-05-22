@@ -72,3 +72,23 @@ class Notification(models.Model):
     type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
     readed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Chat(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_one = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='users_one')
+    user_two = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='users_two')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user_one', 'user_two']
+
+
+class Message(models.Model):
+    id = models.AutoField(primary_key=True)
+    text = models.CharField(max_length=255)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
