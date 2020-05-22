@@ -4,7 +4,7 @@ interface Props {}
 
 const ChatInput: React.FC<Props> = () => {
   return (
-    <div className="p-2">
+    <div className="p-2 mt-2 border-t border-gray-300">
       <input
         type="text"
         placeholder="Say something..."

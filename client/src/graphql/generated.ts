@@ -34,6 +34,7 @@ export type Query = {
   posts?: Maybe<Array<Maybe<PostType>>>;
   comments?: Maybe<Array<Maybe<CommentType>>>;
   me?: Maybe<UserType>;
+  chatMessages?: Maybe<Array<Maybe<MessageType>>>;
 };
 
 
@@ -45,6 +46,11 @@ export type QueryPostsArgs = {
 
 export type QueryCommentsArgs = {
   postId: Scalars['ID'];
+};
+
+
+export type QueryChatMessagesArgs = {
+  userId: Scalars['ID'];
 };
 
 export type UserType = {
@@ -91,6 +97,14 @@ export type CommentType = {
   user: UserType;
   post: PostType;
   text: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+};
+
+export type MessageType = {
+   __typename?: 'MessageType';
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  sender: UserType;
   createdAt: Scalars['DateTime'];
 };
 
@@ -337,6 +351,23 @@ export type SignUpMutation = (
       & Pick<UserType, 'id' | 'username' | 'email' | 'name' | 'isSuperuser' | 'lastLogin' | 'photo' | 'isStaff' | 'isActive' | 'dateJoined' | 'backImage'>
     )> }
   )> }
+);
+
+export type ChatMessageQueryVariables = {
+  userId: Scalars['ID'];
+};
+
+
+export type ChatMessageQuery = (
+  { __typename?: 'Query' }
+  & { chatMessages?: Maybe<Array<Maybe<(
+    { __typename?: 'MessageType' }
+    & Pick<MessageType, 'id' | 'text' | 'createdAt'>
+    & { sender: (
+      { __typename?: 'UserType' }
+      & Pick<UserType, 'id'>
+    ) }
+  )>>> }
 );
 
 export type CommentsQueryVariables = {
@@ -708,6 +739,44 @@ export function useSignUpMutation(baseOptions?: ApolloReactHooks.MutationHookOpt
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = ApolloReactCommon.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = ApolloReactCommon.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const ChatMessageDocument = gql`
+    query ChatMessage($userId: ID!) {
+  chatMessages(userId: $userId) {
+    id
+    text
+    sender {
+      id
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useChatMessageQuery__
+ *
+ * To run a query within a React component, call `useChatMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChatMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChatMessageQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useChatMessageQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ChatMessageQuery, ChatMessageQueryVariables>) {
+        return ApolloReactHooks.useQuery<ChatMessageQuery, ChatMessageQueryVariables>(ChatMessageDocument, baseOptions);
+      }
+export function useChatMessageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChatMessageQuery, ChatMessageQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ChatMessageQuery, ChatMessageQueryVariables>(ChatMessageDocument, baseOptions);
+        }
+export type ChatMessageQueryHookResult = ReturnType<typeof useChatMessageQuery>;
+export type ChatMessageLazyQueryHookResult = ReturnType<typeof useChatMessageLazyQuery>;
+export type ChatMessageQueryResult = ApolloReactCommon.QueryResult<ChatMessageQuery, ChatMessageQueryVariables>;
 export const CommentsDocument = gql`
     query Comments($postId: ID!) {
   comments(postId: $postId) {

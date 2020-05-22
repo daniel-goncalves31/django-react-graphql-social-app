@@ -1,14 +1,22 @@
 import React from "react";
+import { MessageType } from "../../../graphql/generated";
 
-interface Props {}
+interface Props {
+  message: MessageType;
+  currentUserId: string;
+}
 
-const ChatMessage: React.FC<Props> = () => {
+const ChatMessage: React.FC<Props> = ({ message, currentUserId }) => {
   return (
     <div
-      className="p-2 mt-2 rounded-lg bg-indigo-400 text-gray-100 text-xs"
-      style={{ width: "fit-content" }}
+      className={`${
+        message.sender.id === currentUserId
+          ? "self-end bg-gray-200 text-gray-900"
+          : "bg-indigo-400"
+      } p-2 mt-3 rounded-lg shadow text-gray-100 text-xs`}
+      style={{ width: "fit-content", maxWidth: "80%" }}
     >
-      <p>Lorem ipsum dolor, sit amet</p>
+      <p>{message.text}</p>
     </div>
   );
 };

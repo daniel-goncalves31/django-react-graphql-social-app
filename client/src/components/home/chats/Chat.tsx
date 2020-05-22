@@ -19,7 +19,7 @@ const Chat: React.FC<Props> = ({ chat }) => {
         className="w-full flex flex-col bg-white"
         style={{ height: "22rem" }}
       >
-        <ChatList />
+        <ChatList userId={chat.user.id} />
         <ChatInput />
       </div>
     </div>
