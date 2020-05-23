@@ -115,6 +115,7 @@ export type Mutation = {
   likePost?: Maybe<LikePost>;
   dislikePost?: Maybe<DislikePost>;
   createComment?: Maybe<CreateComment>;
+  createMessage?: Maybe<CreateMessage>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -144,6 +145,11 @@ export type MutationDislikePostArgs = {
 
 export type MutationCreateCommentArgs = {
   commentInput: CommentInputType;
+};
+
+
+export type MutationCreateMessageArgs = {
+  messageInput: MessageInputType;
 };
 
 
@@ -206,6 +212,16 @@ export type CommentInputType = {
   usersMarked: Array<Maybe<Scalars['ID']>>;
 };
 
+export type CreateMessage = {
+   __typename?: 'CreateMessage';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
+export type MessageInputType = {
+  text: Scalars['String'];
+  userId: Scalars['ID'];
+};
+
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
@@ -253,6 +269,19 @@ export type CreateCommentMutation = (
   & { createComment?: Maybe<(
     { __typename?: 'CreateComment' }
     & Pick<CreateComment, 'ok'>
+  )> }
+);
+
+export type CreateMessageMutationVariables = {
+  messageInput: MessageInputType;
+};
+
+
+export type CreateMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { createMessage?: Maybe<(
+    { __typename?: 'CreateMessage' }
+    & Pick<CreateMessage, 'ok'>
   )> }
 );
 
@@ -506,6 +535,38 @@ export function useCreateCommentMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = ApolloReactCommon.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const CreateMessageDocument = gql`
+    mutation CreateMessage($messageInput: MessageInputType!) {
+  createMessage(messageInput: $messageInput) {
+    ok
+  }
+}
+    `;
+export type CreateMessageMutationFn = ApolloReactCommon.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
+
+/**
+ * __useCreateMessageMutation__
+ *
+ * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
+ *   variables: {
+ *      messageInput: // value for 'messageInput'
+ *   },
+ * });
+ */
+export function useCreateMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, baseOptions);
+      }
+export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
+export type CreateMessageMutationResult = ApolloReactCommon.MutationResult<CreateMessageMutation>;
+export type CreateMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($postInput: PostInputType!) {
   createPost(postInput: $postInput) {

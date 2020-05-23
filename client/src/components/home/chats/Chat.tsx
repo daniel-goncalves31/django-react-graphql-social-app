@@ -20,7 +20,7 @@ const Chat: React.FC<Props> = ({ chat }) => {
         style={{ height: "22rem" }}
       >
         <ChatList userId={chat.user.id} />
-        <ChatInput />
+        <ChatInput userId={chat.user.id} />
       </div>
     </div>
   );

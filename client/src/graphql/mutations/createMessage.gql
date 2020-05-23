@@ -1,0 +1,5 @@
+mutation CreateMessage($messageInput: MessageInputType!) {
+  createMessage(messageInput: $messageInput) {
+    ok
+  }
+}

@@ -64,6 +64,11 @@ class CommentInputType(graphene.InputObjectType):
     post_id = graphene.ID(required=True)
     users_marked = graphene.List(graphene.ID, required=True)
 
+
+class MessageInputType(graphene.InputObjectType):
+    text = graphene.String(required=True)
+    user_id = graphene.ID(required=True)
+
 # Mutations
 
 
@@ -161,6 +166,31 @@ class CreateComment(graphene.Mutation):
         return CreateComment(ok=True)
 
 
+class CreateMessage(graphene.Mutation):
+
+    class Arguments:
+        message_input = MessageInputType(required=True)
+
+    ok = graphene.Boolean()
+
+    @login_required
+    def mutate(self, info, message_input):
+        current_user = info.context.user
+        other_user = User.objects.get(id=message_input['user_id'])
+
+        chat = Chat.objects.filter(
+            user_one=current_user, user_two=other_user) | Chat.objects.filter(
+            user_one=other_user, user_two=current_user)
+
+        chat = chat[0]
+
+        message = Message(sender=current_user, chat=chat,
+                          text=message_input['text'])
+        message.save()
+
+        return CreateMessage(ok=True)
+
+
 class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     posts = graphene.List(PostType, offset=graphene.Int(
@@ -204,7 +234,7 @@ class Query(graphene.ObjectType):
 
         chat = chat[0]
 
-        return Message.objects.filter(chat=chat)
+        return Message.objects.filter(chat=chat).order_by('-id')
 
 
 class Mutation(graphene.ObjectType):
@@ -213,6 +243,7 @@ class Mutation(graphene.ObjectType):
     like_post = LikePost.Field()
     dislike_post = DislikePost.Field()
     create_comment = CreateComment.Field()
+    create_message = CreateMessage.Field()
 
 
 class Subscription(graphene.ObjectType):
