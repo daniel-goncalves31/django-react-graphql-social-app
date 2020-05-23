@@ -251,14 +251,14 @@ class Subscription(graphene.ObjectType):
     on_new_comment = graphene.Field(
         CommentType, post_id=graphene.ID(required=True))
     on_new_message = graphene.Field(
-        MessageType, user_id=graphene.ID(required=True))
+        MessageType, required=False, chat_id=graphene.ID(required=False))
 
     def resolve_on_new_post(root, info):
         return root.filter(
             lambda event:
                 event.operation == CREATED and
                 isinstance(event.instance, Post)
-        ).map(lambda event: event.instance)[0]
+        ).map(lambda event: event.instance).distinct()
 
     def resolve_on_new_comment(root, info, post_id):
         post = Post.objects.get(id=post_id)
@@ -267,4 +267,16 @@ class Subscription(graphene.ObjectType):
                 event.operation == CREATED and
                 isinstance(event.instance, Comment) and
                 event.instance.post == post
-        ).map(lambda event: event.instance)[0]
+        ).map(lambda event: event.instance).distinct()
+
+    def resolve_on_new_message(root, info, chat_id):
+        if chat_id == 'nope':
+            chat = None
+        else:
+            chat = Chat.objects.get(id=chat_id)
+        return root.filter(
+            lambda event:
+                event.operation == CREATED and
+                isinstance(event.instance, Message) and
+                event.instance.chat == chat
+        ).map(lambda event: event.instance).distinct()

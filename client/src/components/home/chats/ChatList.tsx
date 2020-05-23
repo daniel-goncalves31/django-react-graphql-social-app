@@ -12,13 +12,15 @@ const ChatList: React.FC<Props> = ({ messages }) => {
 
   return (
     <div className="flex-grow flex flex-col-reverse px-2 overflow-y-auto mt-1">
-      {messages?.reverse().map((message) => (
-        <ChatMessage
-          key={message?.id}
-          message={message as any}
-          currentUserId={currentUser?.id!}
-        />
-      ))}
+      {messages
+        ?.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? -1 : 1))
+        .map((message) => (
+          <ChatMessage
+            key={message?.id}
+            message={message as any}
+            currentUserId={currentUser?.id!}
+          />
+        ))}
     </div>
   );
 };

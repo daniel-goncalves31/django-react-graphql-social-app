@@ -11,6 +11,7 @@ export const handleErrors = (error: ApolloError) => {
       toast.error(error.graphQLErrors[0].message);
     }
   } else {
+    console.error(error);
     toast.error(error.message);
   }
 };

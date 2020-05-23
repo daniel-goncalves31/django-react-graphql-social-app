@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Chat as ChatType } from "../../../context/SelectedChatsContext";
-import { useChatMessageQuery } from "../../../graphql/generated";
+import {
+  OnNewMessageDocument,
+  useChatMessageQuery,
+} from "../../../graphql/generated";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatList from "./ChatList";
@@ -10,9 +13,38 @@ interface Props {
 }
 
 const Chat: React.FC<Props> = ({ chat }) => {
-  const { data, loading, error } = useChatMessageQuery({
+  const { data, loading, error, subscribeToMore } = useChatMessageQuery({
     variables: { userId: chat.user.id },
   });
+
+  useEffect(() => {
+    const unsubscribeToLess = subscribeToMore({
+      onError: (e) => console.error(e.message),
+      document: OnNewMessageDocument,
+      variables: { chatId: data?.chatMessages?.id || "nope" },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) {
+          return prev;
+        }
+        return {
+          ...prev,
+          chatMessages: {
+            ...prev.chatMessages,
+            messages: [
+              ...prev!.chatMessages?.messages!,
+              (subscriptionData.data as any).onNewMessage,
+            ],
+          },
+        } as any;
+      },
+    });
+
+    return function unsubscribe() {
+      if (unsubscribeToLess) {
+        unsubscribeToLess();
+      }
+    };
+  }, [subscribeToMore, data]);
 
   if (error) {
     console.error(error.message);

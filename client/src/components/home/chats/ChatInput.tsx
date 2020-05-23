@@ -16,10 +16,9 @@ const ChatInput: React.FC<Props> = ({ chatId }) => {
     if (!text) return;
 
     try {
-      const res = await sendMessage({
+      await sendMessage({
         variables: { messageInput: { chatId, text } },
       });
-      console.log(res);
       setText("");
     } catch (error) {
       handleErrors(error);

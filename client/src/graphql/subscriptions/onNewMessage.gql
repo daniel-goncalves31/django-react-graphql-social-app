@@ -1,0 +1,10 @@
+subscription OnNewMessage($chatId: ID!) {
+  onNewMessage(chatId: $chatId) {
+    id
+    text
+    sender {
+      id
+    }
+    createdAt
+  }
+}

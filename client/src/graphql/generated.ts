@@ -272,7 +272,7 @@ export type SubscriptionOnNewCommentArgs = {
 
 
 export type SubscriptionOnNewMessageArgs = {
-  userId: Scalars['ID'];
+  chatId?: Maybe<Scalars['ID']>;
 };
 
 export type CreateCommentMutationVariables = {
@@ -496,6 +496,23 @@ export type OnNewCommentSubscription = (
     & { user: (
       { __typename?: 'UserType' }
       & Pick<UserType, 'id' | 'name' | 'photo'>
+    ) }
+  )> }
+);
+
+export type OnNewMessageSubscriptionVariables = {
+  chatId: Scalars['ID'];
+};
+
+
+export type OnNewMessageSubscription = (
+  { __typename?: 'Subscription' }
+  & { onNewMessage?: Maybe<(
+    { __typename?: 'MessageType' }
+    & Pick<MessageType, 'id' | 'text' | 'createdAt'>
+    & { sender: (
+      { __typename?: 'UserType' }
+      & Pick<UserType, 'id'>
     ) }
   )> }
 );
@@ -1064,6 +1081,40 @@ export function useOnNewCommentSubscription(baseOptions?: ApolloReactHooks.Subsc
       }
 export type OnNewCommentSubscriptionHookResult = ReturnType<typeof useOnNewCommentSubscription>;
 export type OnNewCommentSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnNewCommentSubscription>;
+export const OnNewMessageDocument = gql`
+    subscription OnNewMessage($chatId: ID!) {
+  onNewMessage(chatId: $chatId) {
+    id
+    text
+    sender {
+      id
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useOnNewMessageSubscription__
+ *
+ * To run a query within a React component, call `useOnNewMessageSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnNewMessageSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnNewMessageSubscription({
+ *   variables: {
+ *      chatId: // value for 'chatId'
+ *   },
+ * });
+ */
+export function useOnNewMessageSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<OnNewMessageSubscription, OnNewMessageSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<OnNewMessageSubscription, OnNewMessageSubscriptionVariables>(OnNewMessageDocument, baseOptions);
+      }
+export type OnNewMessageSubscriptionHookResult = ReturnType<typeof useOnNewMessageSubscription>;
+export type OnNewMessageSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnNewMessageSubscription>;
 export const OnNewPostDocument = gql`
     subscription OnNewPost {
   onNewPost {
