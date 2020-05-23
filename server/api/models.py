@@ -82,13 +82,11 @@ class Chat(models.Model):
         User, on_delete=models.CASCADE, related_name='users_two')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ['user_one', 'user_two']
-
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
     text = models.CharField(max_length=255)
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    chat = models.ForeignKey(
+        Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

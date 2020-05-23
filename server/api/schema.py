@@ -16,7 +16,7 @@ class UserType(DjangoObjectType):
     class Meta:
         model = User
         exclude = ['password', 'post_set', 'like_set',
-                   'comment_set', 'notification_set', 'senders', 'receivers', 'message_set']
+                   'comment_set', 'notification_set', 'senders', 'receivers', 'message_set', 'users_one', 'users_two']
 
 
 class PostType(DjangoObjectType):
@@ -38,6 +38,11 @@ class CommentType(DjangoObjectType):
 class NotificationGQLType(DjangoObjectType):
     class Meta:
         model = Notification
+
+
+class ChatType(DjangoObjectType):
+    class Meta:
+        model = Chat
 
 
 class MessageType(DjangoObjectType):
@@ -67,7 +72,7 @@ class CommentInputType(graphene.InputObjectType):
 
 class MessageInputType(graphene.InputObjectType):
     text = graphene.String(required=True)
-    user_id = graphene.ID(required=True)
+    chat_id = graphene.ID(required=True)
 
 # Mutations
 
@@ -176,13 +181,8 @@ class CreateMessage(graphene.Mutation):
     @login_required
     def mutate(self, info, message_input):
         current_user = info.context.user
-        other_user = User.objects.get(id=message_input['user_id'])
 
-        chat = Chat.objects.filter(
-            user_one=current_user, user_two=other_user) | Chat.objects.filter(
-            user_one=other_user, user_two=current_user)
-
-        chat = chat[0]
+        chat = Chat.objects.get(id=message_input['chat_id'])
 
         message = Message(sender=current_user, chat=chat,
                           text=message_input['text'])
@@ -197,8 +197,8 @@ class Query(graphene.ObjectType):
         required=True), limit=graphene.Int(required=True))
     comments = graphene.List(CommentType, post_id=graphene.ID(required=True))
     me = graphene.Field(UserType)
-    chat_messages = graphene.List(
-        MessageType, user_id=graphene.ID(required=True))
+    chat_messages = graphene.Field(
+        ChatType, user_id=graphene.ID(required=True))
 
     @login_required
     def resolve_users(self, info, **kwargs):
@@ -230,11 +230,11 @@ class Query(graphene.ObjectType):
         if not chat:
             chat = Chat(user_one=current_user, user_two=other_user)
             chat.save()
-            return []
+            return chat
 
         chat = chat[0]
 
-        return Message.objects.filter(chat=chat).order_by('-id')
+        return chat
 
 
 class Mutation(graphene.ObjectType):
@@ -250,6 +250,8 @@ class Subscription(graphene.ObjectType):
     on_new_post = graphene.Field(PostType)
     on_new_comment = graphene.Field(
         CommentType, post_id=graphene.ID(required=True))
+    on_new_message = graphene.Field(
+        MessageType, user_id=graphene.ID(required=True))
 
     def resolve_on_new_post(root, info):
         return root.filter(

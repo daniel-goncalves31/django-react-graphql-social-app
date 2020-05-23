@@ -3,10 +3,10 @@ import { useCreateMessageMutation } from "../../../graphql/generated";
 import { handleErrors } from "../../../utils/error_handler";
 
 interface Props {
-  userId: string;
+  chatId: string;
 }
 
-const ChatInput: React.FC<Props> = ({ userId }) => {
+const ChatInput: React.FC<Props> = ({ chatId }) => {
   const [sendMessage] = useCreateMessageMutation();
   const [text, setText] = useState("");
 
@@ -17,7 +17,7 @@ const ChatInput: React.FC<Props> = ({ userId }) => {
 
     try {
       const res = await sendMessage({
-        variables: { messageInput: { userId, text } },
+        variables: { messageInput: { chatId, text } },
       });
       console.log(res);
       setText("");

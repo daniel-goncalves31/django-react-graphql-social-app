@@ -34,7 +34,7 @@ export type Query = {
   posts?: Maybe<Array<Maybe<PostType>>>;
   comments?: Maybe<Array<Maybe<CommentType>>>;
   me?: Maybe<UserType>;
-  chatMessages?: Maybe<Array<Maybe<MessageType>>>;
+  chatMessages?: Maybe<ChatType>;
 };
 
 
@@ -100,10 +100,20 @@ export type CommentType = {
   createdAt: Scalars['DateTime'];
 };
 
+export type ChatType = {
+   __typename?: 'ChatType';
+  id: Scalars['ID'];
+  userOne: UserType;
+  userTwo: UserType;
+  createdAt: Scalars['DateTime'];
+  messages: Array<MessageType>;
+};
+
 export type MessageType = {
    __typename?: 'MessageType';
   id: Scalars['ID'];
   text: Scalars['String'];
+  chat: ChatType;
   sender: UserType;
   createdAt: Scalars['DateTime'];
 };
@@ -219,7 +229,7 @@ export type CreateMessage = {
 
 export type MessageInputType = {
   text: Scalars['String'];
-  userId: Scalars['ID'];
+  chatId: Scalars['ID'];
 };
 
 export type ObtainJsonWebToken = {
@@ -252,11 +262,17 @@ export type Subscription = {
    __typename?: 'Subscription';
   onNewPost?: Maybe<PostType>;
   onNewComment?: Maybe<CommentType>;
+  onNewMessage?: Maybe<MessageType>;
 };
 
 
 export type SubscriptionOnNewCommentArgs = {
   postId: Scalars['ID'];
+};
+
+
+export type SubscriptionOnNewMessageArgs = {
+  userId: Scalars['ID'];
 };
 
 export type CreateCommentMutationVariables = {
@@ -389,14 +405,18 @@ export type ChatMessageQueryVariables = {
 
 export type ChatMessageQuery = (
   { __typename?: 'Query' }
-  & { chatMessages?: Maybe<Array<Maybe<(
-    { __typename?: 'MessageType' }
-    & Pick<MessageType, 'id' | 'text' | 'createdAt'>
-    & { sender: (
-      { __typename?: 'UserType' }
-      & Pick<UserType, 'id'>
-    ) }
-  )>>> }
+  & { chatMessages?: Maybe<(
+    { __typename?: 'ChatType' }
+    & Pick<ChatType, 'id'>
+    & { messages: Array<(
+      { __typename?: 'MessageType' }
+      & Pick<MessageType, 'id' | 'text' | 'createdAt'>
+      & { sender: (
+        { __typename?: 'UserType' }
+        & Pick<UserType, 'id'>
+      ) }
+    )> }
+  )> }
 );
 
 export type CommentsQueryVariables = {
@@ -804,11 +824,14 @@ export const ChatMessageDocument = gql`
     query ChatMessage($userId: ID!) {
   chatMessages(userId: $userId) {
     id
-    text
-    sender {
+    messages {
       id
+      text
+      sender {
+        id
+      }
+      createdAt
     }
-    createdAt
   }
 }
     `;

@@ -1,13 +1,28 @@
 import React from "react";
 import { Chat as ChatType } from "../../../context/SelectedChatsContext";
+import { useChatMessageQuery } from "../../../graphql/generated";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatList from "./ChatList";
+
 interface Props {
   chat: ChatType;
 }
 
 const Chat: React.FC<Props> = ({ chat }) => {
+  const { data, loading, error } = useChatMessageQuery({
+    variables: { userId: chat.user.id },
+  });
+
+  if (error) {
+    console.error(error.message);
+    return <p>Error</p>;
+  }
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <div
       className={`${
@@ -19,8 +34,8 @@ const Chat: React.FC<Props> = ({ chat }) => {
         className="w-full flex flex-col bg-white"
         style={{ height: "22rem" }}
       >
-        <ChatList userId={chat.user.id} />
-        <ChatInput userId={chat.user.id} />
+        <ChatList messages={data?.chatMessages?.messages as any} />
+        <ChatInput chatId={data?.chatMessages?.id!} />
       </div>
     </div>
   );

@@ -1,10 +1,13 @@
 query ChatMessage($userId: ID!) {
   chatMessages(userId: $userId) {
     id
-    text
-    sender {
+    messages {
       id
+      text
+      sender {
+        id
+      }
+      createdAt
     }
-    createdAt
   }
 }
