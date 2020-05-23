@@ -1,0 +1,5 @@
+mutation ChangeImage($imageInput: ChangeImageInputType!) {
+  changeImage(imageInput: $imageInput) {
+    imageUrl
+  }
+}

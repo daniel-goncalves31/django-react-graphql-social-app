@@ -27,9 +27,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, error_messages={
                               'unique': "Email is already taken"})
     photo = models.ImageField(
-        upload_to=photo_image_path, null=True, storage=OverwriteStorage())
+        upload_to=photo_image_path, null=True)
     back_image = models.ImageField(
-        upload_to=back_image_path, null=True, storage=OverwriteStorage())
+        upload_to=back_image_path, null=True)
 
 
 class Post(models.Model):

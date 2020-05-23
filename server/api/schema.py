@@ -1,3 +1,5 @@
+import time
+
 import graphene
 from django.contrib.auth import authenticate, login
 from django.db.models import Q
@@ -10,8 +12,9 @@ from graphql_jwt.utils import jwt_encode, set_cookie
 
 from .models import Chat, Comment, Like, Message, Notification, Post, User
 
-
 # Types
+
+
 class UserType(DjangoObjectType):
     class Meta:
         model = User
@@ -73,6 +76,16 @@ class CommentInputType(graphene.InputObjectType):
 class MessageInputType(graphene.InputObjectType):
     text = graphene.String(required=True)
     chat_id = graphene.ID(required=True)
+
+
+class EImageType(graphene.Enum):
+    PHOTO = 1
+    BACK_IMAGE = 2
+
+
+class ChangeImageInputType(graphene.InputObjectType):
+    image = Upload(required=True)
+    image_type = EImageType(required=True)
 
 # Mutations
 
@@ -191,6 +204,29 @@ class CreateMessage(graphene.Mutation):
         return CreateMessage(ok=True)
 
 
+class ChangeImage(graphene.Mutation):
+
+    class Arguments:
+        image_input = ChangeImageInputType(required=True)
+
+    image_url = graphene.String()
+
+    @login_required
+    def mutate(self, info, image_input):
+        user = info.context.user
+
+        timestamp = str(int(round(time.time() * 1000)))
+
+        if image_input['image_type'] == EImageType.PHOTO:
+            user.photo = image_input['image']
+            user.save()
+            return ChangeImage(image_url=user.photo)
+        else:
+            user.back_image = image_input['image']
+            user.save()
+            return ChangeImage(image_url=user.back_image)
+
+
 class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     posts = graphene.List(PostType, offset=graphene.Int(
@@ -244,6 +280,7 @@ class Mutation(graphene.ObjectType):
     dislike_post = DislikePost.Field()
     create_comment = CreateComment.Field()
     create_message = CreateMessage.Field()
+    change_image = ChangeImage.Field()
 
 
 class Subscription(graphene.ObjectType):

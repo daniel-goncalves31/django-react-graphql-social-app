@@ -126,6 +126,7 @@ export type Mutation = {
   dislikePost?: Maybe<DislikePost>;
   createComment?: Maybe<CreateComment>;
   createMessage?: Maybe<CreateMessage>;
+  changeImage?: Maybe<ChangeImage>;
   login?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
@@ -160,6 +161,11 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateMessageArgs = {
   messageInput: MessageInputType;
+};
+
+
+export type MutationChangeImageArgs = {
+  imageInput: ChangeImageInputType;
 };
 
 
@@ -232,6 +238,21 @@ export type MessageInputType = {
   chatId: Scalars['ID'];
 };
 
+export type ChangeImage = {
+   __typename?: 'ChangeImage';
+  imageUrl?: Maybe<Scalars['String']>;
+};
+
+export type ChangeImageInputType = {
+  image: Scalars['Upload'];
+  imageType: EImageType;
+};
+
+export enum EImageType {
+  Photo = 'PHOTO',
+  BackImage = 'BACK_IMAGE'
+}
+
 export type ObtainJsonWebToken = {
    __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
@@ -274,6 +295,19 @@ export type SubscriptionOnNewCommentArgs = {
 export type SubscriptionOnNewMessageArgs = {
   chatId?: Maybe<Scalars['ID']>;
 };
+
+export type ChangeImageMutationVariables = {
+  imageInput: ChangeImageInputType;
+};
+
+
+export type ChangeImageMutation = (
+  { __typename?: 'Mutation' }
+  & { changeImage?: Maybe<(
+    { __typename?: 'ChangeImage' }
+    & Pick<ChangeImage, 'imageUrl'>
+  )> }
+);
 
 export type CreateCommentMutationVariables = {
   commentInput: CommentInputType;
@@ -540,6 +574,38 @@ export type OnNewPostSubscription = (
 );
 
 
+export const ChangeImageDocument = gql`
+    mutation ChangeImage($imageInput: ChangeImageInputType!) {
+  changeImage(imageInput: $imageInput) {
+    imageUrl
+  }
+}
+    `;
+export type ChangeImageMutationFn = ApolloReactCommon.MutationFunction<ChangeImageMutation, ChangeImageMutationVariables>;
+
+/**
+ * __useChangeImageMutation__
+ *
+ * To run a mutation, you first call `useChangeImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeImageMutation, { data, loading, error }] = useChangeImageMutation({
+ *   variables: {
+ *      imageInput: // value for 'imageInput'
+ *   },
+ * });
+ */
+export function useChangeImageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ChangeImageMutation, ChangeImageMutationVariables>) {
+        return ApolloReactHooks.useMutation<ChangeImageMutation, ChangeImageMutationVariables>(ChangeImageDocument, baseOptions);
+      }
+export type ChangeImageMutationHookResult = ReturnType<typeof useChangeImageMutation>;
+export type ChangeImageMutationResult = ApolloReactCommon.MutationResult<ChangeImageMutation>;
+export type ChangeImageMutationOptions = ApolloReactCommon.BaseMutationOptions<ChangeImageMutation, ChangeImageMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation CreateComment($commentInput: CommentInputType!) {
   createComment(commentInput: $commentInput) {
