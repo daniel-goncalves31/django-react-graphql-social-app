@@ -2,7 +2,7 @@ from django.db.models.signals import post_delete, post_save
 from graphene_subscriptions.signals import (post_delete_subscription,
                                             post_save_subscription)
 
-from .models import Comment, Message, Post
+from .models import Comment, Message, Notification, Post
 
 # Post Signals
 post_save.connect(post_save_subscription,
@@ -18,3 +18,7 @@ post_save.connect(post_save_subscription,
 # Chat Messages Signals
 post_save.connect(post_save_subscription,
                   sender=Message, dispatch_uid="message_post_save")
+
+# Notification Signals
+post_save.connect(post_save_subscription, sender=Notification,
+                  dispatch_uid="notification_post_save")

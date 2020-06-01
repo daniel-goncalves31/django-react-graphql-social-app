@@ -47,7 +47,7 @@ const FeedItem: React.FC<Props> = ({ post }) => {
           className="w-full object-cover object-center rounded"
           src={postImage}
           alt="post"
-          style={{ maxHeight: "20rem" }}
+          style={{ maxHeight: "50vh" }}
         />
       )}
       <LikedBy likes={likes} currentUserId={currentUser?.id!} />

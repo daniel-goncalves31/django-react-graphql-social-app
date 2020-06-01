@@ -4,6 +4,7 @@ import { BsBook } from "react-icons/bs";
 import { RiFeedbackLine } from "react-icons/ri";
 import { useUserContext } from "../../../../context/UserContext";
 import NavigationMenuItem from "./NavigationMenuItem";
+import NotificationNavigationMenuItem from "./NotificationNavigationMenuItem";
 
 interface Props {}
 
@@ -23,9 +24,12 @@ const NavigationMenu: React.FC<Props> = () => {
         <NavigationMenuItem path="/home/profile" Icon={AiOutlineUser}>
           Profile
         </NavigationMenuItem>
-        <NavigationMenuItem path="/home/notifications" Icon={RiFeedbackLine}>
+        <NotificationNavigationMenuItem
+          path="/home/notifications"
+          Icon={RiFeedbackLine}
+        >
           Notifications
-        </NavigationMenuItem>
+        </NotificationNavigationMenuItem>
       </ul>
     </div>
   );

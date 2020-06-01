@@ -27,10 +27,9 @@ const CreatePost: React.FC<Props> = () => {
         });
       }
       const text = textRef.current!.value;
-      const response = await createPost({
+      await createPost({
         variables: { postInput: { image: compressedFile, text } },
       });
-      console.log(response);
       push("/home/feed");
     } catch (error) {
       if (error.networkError) console.log(error.networkError.result);

@@ -235,6 +235,7 @@ class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     chat_messages = graphene.Field(
         ChatType, user_id=graphene.ID(required=True))
+    notifications = graphene.List(NotificationGQLType)
 
     @login_required
     def resolve_users(self, info, **kwargs):
@@ -272,6 +273,12 @@ class Query(graphene.ObjectType):
 
         return chat
 
+    @login_required
+    def resolve_notifications(self, info, **kwargs):
+        current_user = info.context.user
+
+        return Notification.objects.filter(receiver=current_user).order_by('-created_at')
+
 
 class Mutation(graphene.ObjectType):
     signup = SignUp.Field()
@@ -289,6 +296,9 @@ class Subscription(graphene.ObjectType):
         CommentType, post_id=graphene.ID(required=True))
     on_new_message = graphene.Field(
         MessageType, required=False, chat_id=graphene.ID(required=False))
+    on_new_notification = graphene.Field(
+        NotificationGQLType, required=True, current_user_id=graphene.ID(required=True)
+    )
 
     def resolve_on_new_post(root, info):
         return root.filter(
@@ -316,4 +326,13 @@ class Subscription(graphene.ObjectType):
                 event.operation == CREATED and
                 isinstance(event.instance, Message) and
                 event.instance.chat == chat
+        ).map(lambda event: event.instance).distinct()
+
+    def resolve_on_new_notification(root, info, current_user_id):
+        user = User.objects.get(id=current_user_id)
+        return root.filter(
+            lambda event:
+                event.operation == CREATED and
+                isinstance(event.instance, Notification) and
+                event.instance.receiver == user
         ).map(lambda event: event.instance).distinct()

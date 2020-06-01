@@ -28,6 +28,7 @@ const Input: React.FC<Props> = ({
         {label}
       </label>
       <input
+        autoComplete="off"
         id={label}
         type={type}
         onChange={onChange}

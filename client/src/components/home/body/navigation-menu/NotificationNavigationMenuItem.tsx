@@ -1,13 +1,20 @@
 import React from "react";
 import { IconType } from "react-icons/lib/cjs";
 import { NavLink } from "react-router-dom";
+import { useNotificationContext } from "../../../../context/NotificationContext";
 
 interface Props {
   Icon: IconType;
   path: string;
 }
 
-const NavigationMenuItem: React.FC<Props> = ({ children, Icon, path }) => {
+const NotificationNavigationMenuItem: React.FC<Props> = ({
+  children,
+  Icon,
+  path,
+}) => {
+  const { notificationsCount } = useNotificationContext();
+
   return (
     <li>
       <NavLink
@@ -19,11 +26,11 @@ const NavigationMenuItem: React.FC<Props> = ({ children, Icon, path }) => {
         <Icon className="h-4 w-4 mr-3" />
         {children}
         <span className="bg-red-400 rounded-full p-2 tracking-wide ml-3 h-1 w-1 flex justify-center items-center text-white">
-          0
+          {notificationsCount}
         </span>
       </NavLink>
     </li>
   );
 };
 
-export default NavigationMenuItem;
+export default NotificationNavigationMenuItem;

@@ -1,0 +1,13 @@
+subscription OnNewNotification($currentUserId: ID!) {
+  onNewNotification(currentUserId: $currentUserId) {
+    id
+    readed
+    sender {
+      id
+      name
+      photo
+    }
+    createdAt
+    type
+  }
+}

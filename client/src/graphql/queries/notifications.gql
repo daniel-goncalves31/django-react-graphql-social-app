@@ -1,0 +1,13 @@
+query Notifications {
+  notifications {
+    id
+    readed
+    sender {
+      id
+      name
+      photo
+    }
+    createdAt
+    type
+  }
+}
