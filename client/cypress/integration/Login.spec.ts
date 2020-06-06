@@ -1,7 +1,7 @@
 beforeEach(() => {
   cy.visit("/login");
 });
-// Teste
+// Teste 1
 describe("Login Component", () => {
   describe("Render without crash", () => {
     it("Render the inputs", () => {
