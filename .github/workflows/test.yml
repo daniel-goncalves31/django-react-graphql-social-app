@@ -20,5 +20,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          working-directory: client/cypress
+          working-directory: client
           browser: chrome
