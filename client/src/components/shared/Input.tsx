@@ -30,6 +30,7 @@ const Input: React.FC<Props> = ({
       <input
         autoComplete="off"
         id={label}
+        name={label}
         type={type}
         onChange={onChange}
         onBlur={onBlur}
