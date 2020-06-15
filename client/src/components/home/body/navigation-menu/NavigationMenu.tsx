@@ -2,34 +2,36 @@ import React from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsBook } from "react-icons/bs";
 import { RiFeedbackLine } from "react-icons/ri";
+import { useNotificationContext } from "../../../../context/NotificationContext";
+import { usePostContext } from "../../../../context/PostContext";
 import { useUserContext } from "../../../../context/UserContext";
 import NavigationMenuItem from "./NavigationMenuItem";
-import NotificationNavigationMenuItem from "./NotificationNavigationMenuItem";
 
 interface Props {}
 
 const NavigationMenu: React.FC<Props> = () => {
   const { currentUser } = useUserContext();
+  const { notificationsCount } = useNotificationContext();
+  const { postsCount } = usePostContext();
   const { name, username } = currentUser!;
+
   return (
-    <div className="w-12/12">
+    <div className="w-12/12 mt-4">
       <h1 className="text-gray-200 text-2xl">{`${name} (${username})`}</h1>
-      <h5 className="text-gray-200 italic text-xs">
-        I'm a space bound rocketship and your heart is the moon!
-      </h5>
       <ul className="flex items-center py-1">
-        <NavigationMenuItem path="/home/feed" Icon={BsBook}>
+        <NavigationMenuItem path="/home/feed" Icon={BsBook} count={postsCount}>
           Feed
         </NavigationMenuItem>
         <NavigationMenuItem path="/home/profile" Icon={AiOutlineUser}>
           Profile
         </NavigationMenuItem>
-        <NotificationNavigationMenuItem
+        <NavigationMenuItem
           path="/home/notifications"
           Icon={RiFeedbackLine}
+          count={notificationsCount}
         >
           Notifications
-        </NotificationNavigationMenuItem>
+        </NavigationMenuItem>
       </ul>
     </div>
   );

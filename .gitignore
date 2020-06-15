@@ -3,3 +3,4 @@ server/config.ini
 **/*.env
 server/static/**/*.*
 !**/.gitkeep
+docker-compose.yml

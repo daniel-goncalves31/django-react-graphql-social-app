@@ -7,12 +7,14 @@ import {
 } from "../graphql/generated";
 
 interface Context {
-  posts: null | PostType[];
+  posts: PostType[];
+  postsCount: number;
   getMorePosts: () => void;
 }
 
 const PostContext = React.createContext<Context>({
-  posts: null,
+  posts: [],
+  postsCount: 0,
   getMorePosts: () => {},
 });
 
@@ -23,7 +25,7 @@ const PostProvider: React.FC = ({ children }) => {
     variables: { offset: 0, limit: 5 },
   });
 
-  let posts: any = null;
+  let posts: any = [];
   if (data?.posts) {
     posts = data.posts;
   }
@@ -63,7 +65,9 @@ const PostProvider: React.FC = ({ children }) => {
   };
 
   return (
-    <PostContext.Provider value={{ posts, getMorePosts }}>
+    <PostContext.Provider
+      value={{ posts, getMorePosts, postsCount: posts.length }}
+    >
       {children}
     </PostContext.Provider>
   );

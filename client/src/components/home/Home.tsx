@@ -1,5 +1,6 @@
 import React from "react";
 import { NotificationProvider } from "../../context/NotificationContext";
+import { PostProvider } from "../../context/PostContext";
 import { SelectedChatsProvider } from "../../context/SelectedChatsContext";
 import Body from "./body/Body";
 import ChatsContainer from "./chats/ChatsContainer";
@@ -13,10 +14,12 @@ const Home: React.FC<Props> = () => {
     <>
       <Header />
       <SelectedChatsProvider>
-        <NotificationProvider>
-          <Body />
-          <ChatsContainer />
-        </NotificationProvider>
+        <PostProvider>
+          <NotificationProvider>
+            <Body />
+            <ChatsContainer />
+          </NotificationProvider>
+        </PostProvider>
       </SelectedChatsProvider>
     </>
   );

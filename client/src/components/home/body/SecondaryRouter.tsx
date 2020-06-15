@@ -12,7 +12,7 @@ const SecondaryRouter: React.FC<Props> = () => {
       <Route path="/home/feed" component={Feed} />
       <Route path="/home/notifications" component={Notifications} />
       <Route path="/home/create-post" component={CreatePost} />
-      <Redirect from="/home" to="/home/notifications" exact />
+      <Redirect from="/home" to="/home/feed" exact />
     </Switch>
   );
 };
