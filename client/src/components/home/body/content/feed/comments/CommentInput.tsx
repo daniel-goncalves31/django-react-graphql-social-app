@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Mention, MentionsInput } from "react-mentions";
 import { useAllUsersContext } from "../../../../../../context/AllUsersContext";
+import { useUserStatisticsContext } from "../../../../../../context/UserStatistics";
 import { useCreateCommentMutation } from "../../../../../../graphql/generated";
 import { handleErrors } from "../../../../../../utils/error_handler";
 import EmojiPicker from "./EmojiPicker";
@@ -14,8 +15,8 @@ let markedUsers: { id: string; display: string }[] = [];
 const CommentInput: React.FC<Props> = ({ postId }) => {
   const [comment, setComment] = useState("");
   const [createComment, { loading }] = useCreateCommentMutation();
-
   const { allUsers } = useAllUsersContext();
+  const { setUserStatistics } = useUserStatisticsContext();
 
   const handleonKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -48,6 +49,10 @@ const CommentInput: React.FC<Props> = ({ postId }) => {
         },
       });
       setComment("");
+      setUserStatistics((prevStats) => ({
+        ...prevStats,
+        commentsCount: prevStats.commentsCount! + 1,
+      }));
     } catch (error) {
       handleErrors(error);
     }

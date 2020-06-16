@@ -1,5 +1,6 @@
 import React from "react";
 import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
+import { useUserStatisticsContext } from "../../../../../../context/UserStatistics";
 import {
   LikeType,
   useDislikePostMutation,
@@ -22,13 +23,17 @@ const LikeButtons: React.FC<Props> = ({
 }) => {
   const [likePost] = useLikePostMutation();
   const [dislikePost] = useDislikePostMutation();
-
+  const { setUserStatistics } = useUserStatisticsContext();
   const currentUserLike = likes.find((like) => like.user.id === currentUserId);
   const handleLikePost = async () => {
     try {
       const { data } = await likePost({ variables: { postId } });
       if (data?.likePost?.like) {
         setLikes((prevLikes) => [...prevLikes, data?.likePost?.like as any]);
+        setUserStatistics((prevStats) => ({
+          ...prevStats,
+          likesCount: prevStats.likesCount! + 1,
+        }));
       }
     } catch (error) {
       handleErrors(error);
@@ -47,6 +52,10 @@ const LikeButtons: React.FC<Props> = ({
         const newLikes = likes;
         newLikes.splice(likeToRemoveIndex, 1);
         setLikes([...newLikes]);
+        setUserStatistics((prevStats) => ({
+          ...prevStats,
+          likesCount: prevStats.likesCount! - 1,
+        }));
       }
     } catch (error) {
       handleErrors(error);

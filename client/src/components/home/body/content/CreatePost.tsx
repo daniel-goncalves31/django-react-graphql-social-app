@@ -2,6 +2,7 @@ import imageCompression from "browser-image-compression";
 import React, { useRef, useState } from "react";
 import ImageSelectPreview from "react-image-select-pv";
 import { useHistory } from "react-router-dom";
+import { useUserStatisticsContext } from "../../../../context/UserStatistics";
 import { useCreatePostMutation } from "../../../../graphql/generated";
 interface Props {}
 
@@ -9,7 +10,7 @@ const CreatePost: React.FC<Props> = () => {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const { push } = useHistory();
-
+  const { setUserStatistics } = useUserStatisticsContext();
   const [createPost] = useCreatePostMutation();
 
   const handleImageChange = (files: any) => {
@@ -30,6 +31,10 @@ const CreatePost: React.FC<Props> = () => {
       await createPost({
         variables: { postInput: { image: compressedFile, text } },
       });
+      setUserStatistics((prevStats) => ({
+        ...prevStats,
+        postsCount: prevStats.postsCount! + 1,
+      }));
       push("/home/feed");
     } catch (error) {
       if (error.networkError) console.log(error.networkError.result);

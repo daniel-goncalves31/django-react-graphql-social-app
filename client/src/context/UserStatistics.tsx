@@ -10,15 +10,24 @@ interface Context {
   setUserStatistics: React.Dispatch<React.SetStateAction<UserStatisticsType>>;
 }
 
+const defaultValues: UserStatisticsType = {
+  commentsCount: 0,
+  friendsCount: 0,
+  likesCount: 0,
+  postsCount: 0,
+};
+
 const UserStatisticsContext = React.createContext<Context>({
-  userStatistics: {},
+  userStatistics: defaultValues,
   setUserStatistics: () => {},
 });
 
 const useUserStatisticsContext = () => useContext(UserStatisticsContext);
 
 const UserStatisticsProvider: React.FC = ({ children }) => {
-  const [userStatistics, setUserStatistics] = useState<UserStatisticsType>({});
+  const [userStatistics, setUserStatistics] = useState<UserStatisticsType>(
+    defaultValues
+  );
 
   const { query } = useApolloClient();
 
@@ -28,14 +37,11 @@ const UserStatisticsProvider: React.FC = ({ children }) => {
         query: UserStatisticsDocument,
       });
       const userStatistics = res.data.userStatistics;
-      if (!userStatistics) {
-        setUserStatistics({});
-      } else {
+      if (userStatistics) {
         setUserStatistics(userStatistics);
       }
     } catch (error) {
       console.error(error.message);
-      setUserStatistics({});
     }
   };
 
