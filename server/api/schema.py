@@ -52,6 +52,14 @@ class MessageType(DjangoObjectType):
     class Meta:
         model = Message
 
+
+class UserStatisticsType(graphene.ObjectType):
+    posts_count = graphene.Int()
+    friends_count = graphene.Int()
+    likes_count = graphene.Int()
+    comments_count = graphene.Int()
+
+
 # Inputs Types
 
 
@@ -236,6 +244,7 @@ class Query(graphene.ObjectType):
     chat_messages = graphene.Field(
         ChatType, user_id=graphene.ID(required=True))
     notifications = graphene.List(NotificationGQLType)
+    user_statistics = graphene.Field(UserStatisticsType)
 
     @login_required
     def resolve_users(self, info, **kwargs):
@@ -278,6 +287,24 @@ class Query(graphene.ObjectType):
         current_user = info.context.user
 
         return Notification.objects.filter(receiver=current_user).order_by('-created_at')
+
+    @login_required
+    def resolve_user_statistics(self, info, **kwargs):
+        user = info.context.user
+
+        posts_count = Post.objects.filter(user=user).count()
+        likes_count = Like.objects.filter(user=user).count()
+        comments_count = Comment.objects.filter(user=user).count()
+        friends_count = User.objects.count()
+
+        user_statistics = {
+            'posts_count': posts_count,
+            'likes_count': likes_count,
+            'comments_count': comments_count,
+            'friends_count': friends_count
+        }
+
+        return user_statistics
 
 
 class Mutation(graphene.ObjectType):
