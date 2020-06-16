@@ -1,0 +1,8 @@
+query UserStatistics {
+  userStatistics {
+    postsCount
+    friendsCount
+    commentsCount
+    likesCount
+  }
+}

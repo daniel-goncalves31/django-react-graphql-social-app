@@ -29,13 +29,14 @@ export type Scalars = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   users?: Maybe<Array<Maybe<UserType>>>;
   posts?: Maybe<Array<Maybe<PostType>>>;
   comments?: Maybe<Array<Maybe<CommentType>>>;
   me?: Maybe<UserType>;
   chatMessages?: Maybe<ChatType>;
   notifications?: Maybe<Array<Maybe<NotificationGqlType>>>;
+  userStatistics?: Maybe<UserStatisticsType>;
 };
 
 
@@ -55,7 +56,7 @@ export type QueryChatMessagesArgs = {
 };
 
 export type UserType = {
-   __typename?: 'UserType';
+  __typename?: 'UserType';
   id: Scalars['ID'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   /** Designates that this user has all permissions without explicitly assigning them. */
@@ -75,7 +76,7 @@ export type UserType = {
 
 
 export type PostType = {
-   __typename?: 'PostType';
+  __typename?: 'PostType';
   id: Scalars['ID'];
   user: UserType;
   text: Scalars['String'];
@@ -85,7 +86,7 @@ export type PostType = {
 };
 
 export type LikeType = {
-   __typename?: 'LikeType';
+  __typename?: 'LikeType';
   id: Scalars['ID'];
   user: UserType;
   post: PostType;
@@ -93,7 +94,7 @@ export type LikeType = {
 };
 
 export type CommentType = {
-   __typename?: 'CommentType';
+  __typename?: 'CommentType';
   id: Scalars['ID'];
   user: UserType;
   post: PostType;
@@ -102,7 +103,7 @@ export type CommentType = {
 };
 
 export type ChatType = {
-   __typename?: 'ChatType';
+  __typename?: 'ChatType';
   id: Scalars['ID'];
   userOne: UserType;
   userTwo: UserType;
@@ -111,7 +112,7 @@ export type ChatType = {
 };
 
 export type MessageType = {
-   __typename?: 'MessageType';
+  __typename?: 'MessageType';
   id: Scalars['ID'];
   text: Scalars['String'];
   chat: ChatType;
@@ -120,7 +121,7 @@ export type MessageType = {
 };
 
 export type NotificationGqlType = {
-   __typename?: 'NotificationGQLType';
+  __typename?: 'NotificationGQLType';
   id: Scalars['ID'];
   sender: UserType;
   receiver: UserType;
@@ -135,8 +136,16 @@ export enum NotificationType {
   MarkedInPost = 'MARKED_IN_POST'
 }
 
+export type UserStatisticsType = {
+  __typename?: 'UserStatisticsType';
+  postsCount?: Maybe<Scalars['Int']>;
+  friendsCount?: Maybe<Scalars['Int']>;
+  likesCount?: Maybe<Scalars['Int']>;
+  commentsCount?: Maybe<Scalars['Int']>;
+};
+
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   signup?: Maybe<SignUp>;
   createPost?: Maybe<CreatePost>;
   likePost?: Maybe<LikePost>;
@@ -202,7 +211,7 @@ export type MutationRefreshTokenArgs = {
 };
 
 export type SignUp = {
-   __typename?: 'SignUp';
+  __typename?: 'SignUp';
   user?: Maybe<UserType>;
 };
 
@@ -214,7 +223,7 @@ export type SignUpInputType = {
 };
 
 export type CreatePost = {
-   __typename?: 'CreatePost';
+  __typename?: 'CreatePost';
   post?: Maybe<PostType>;
 };
 
@@ -225,17 +234,17 @@ export type PostInputType = {
 
 
 export type LikePost = {
-   __typename?: 'LikePost';
+  __typename?: 'LikePost';
   like?: Maybe<LikeType>;
 };
 
 export type DislikePost = {
-   __typename?: 'DislikePost';
+  __typename?: 'DislikePost';
   disliked?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateComment = {
-   __typename?: 'CreateComment';
+  __typename?: 'CreateComment';
   ok?: Maybe<Scalars['Boolean']>;
 };
 
@@ -246,7 +255,7 @@ export type CommentInputType = {
 };
 
 export type CreateMessage = {
-   __typename?: 'CreateMessage';
+  __typename?: 'CreateMessage';
   ok?: Maybe<Scalars['Boolean']>;
 };
 
@@ -256,7 +265,7 @@ export type MessageInputType = {
 };
 
 export type ChangeImage = {
-   __typename?: 'ChangeImage';
+  __typename?: 'ChangeImage';
   imageUrl?: Maybe<Scalars['String']>;
 };
 
@@ -271,7 +280,7 @@ export enum EImageType {
 }
 
 export type ObtainJsonWebToken = {
-   __typename?: 'ObtainJSONWebToken';
+  __typename?: 'ObtainJSONWebToken';
   payload: Scalars['GenericScalar'];
   refreshExpiresIn: Scalars['Int'];
   user?: Maybe<UserType>;
@@ -280,24 +289,24 @@ export type ObtainJsonWebToken = {
 
 
 export type Verify = {
-   __typename?: 'Verify';
+  __typename?: 'Verify';
   payload: Scalars['GenericScalar'];
 };
 
 export type Refresh = {
-   __typename?: 'Refresh';
+  __typename?: 'Refresh';
   payload: Scalars['GenericScalar'];
   refreshExpiresIn: Scalars['Int'];
   token: Scalars['String'];
 };
 
 export type DeleteJsonWebTokenCookie = {
-   __typename?: 'DeleteJSONWebTokenCookie';
+  __typename?: 'DeleteJSONWebTokenCookie';
   deleted: Scalars['Boolean'];
 };
 
 export type Subscription = {
-   __typename?: 'Subscription';
+  __typename?: 'Subscription';
   onNewPost?: Maybe<PostType>;
   onNewComment?: Maybe<CommentType>;
   onNewMessage?: Maybe<MessageType>;
@@ -542,6 +551,17 @@ export type PostsQuery = (
       ) }
     )> }
   )>>> }
+);
+
+export type UserStatisticsQueryVariables = {};
+
+
+export type UserStatisticsQuery = (
+  { __typename?: 'Query' }
+  & { userStatistics?: Maybe<(
+    { __typename?: 'UserStatisticsType' }
+    & Pick<UserStatisticsType, 'postsCount' | 'friendsCount' | 'commentsCount' | 'likesCount'>
+  )> }
 );
 
 export type UsersQueryVariables = {};
@@ -1171,6 +1191,41 @@ export function usePostsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>;
+export const UserStatisticsDocument = gql`
+    query UserStatistics {
+  userStatistics {
+    postsCount
+    friendsCount
+    commentsCount
+    likesCount
+  }
+}
+    `;
+
+/**
+ * __useUserStatisticsQuery__
+ *
+ * To run a query within a React component, call `useUserStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserStatisticsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserStatisticsQuery, UserStatisticsQueryVariables>) {
+        return ApolloReactHooks.useQuery<UserStatisticsQuery, UserStatisticsQueryVariables>(UserStatisticsDocument, baseOptions);
+      }
+export function useUserStatisticsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserStatisticsQuery, UserStatisticsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<UserStatisticsQuery, UserStatisticsQueryVariables>(UserStatisticsDocument, baseOptions);
+        }
+export type UserStatisticsQueryHookResult = ReturnType<typeof useUserStatisticsQuery>;
+export type UserStatisticsLazyQueryHookResult = ReturnType<typeof useUserStatisticsLazyQuery>;
+export type UserStatisticsQueryResult = ApolloReactCommon.QueryResult<UserStatisticsQuery, UserStatisticsQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {

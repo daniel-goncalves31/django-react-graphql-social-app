@@ -3,17 +3,34 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { FiHeart, FiUsers } from "react-icons/fi";
 import { MdRssFeed } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useUserStatisticsContext } from "../../../../context/UserStatistics";
 import SideMenuItem from "./SideMenuItem";
+
 interface Props {}
 
 const SideMenu: React.FC<Props> = () => {
+  const { userStatistics } = useUserStatisticsContext();
+  const {
+    commentsCount,
+    postsCount,
+    likesCount,
+    friendsCount,
+  } = userStatistics!;
   return (
     <>
       <div className="mt-20 bg-white shadow rounded">
-        <SideMenuItem Icon={MdRssFeed}>Activities</SideMenuItem>
-        <SideMenuItem Icon={FiUsers}>Friends</SideMenuItem>
-        <SideMenuItem Icon={FiHeart}>You Liked</SideMenuItem>
-        <SideMenuItem Icon={FaRegCommentDots}>Your Comments</SideMenuItem>
+        <SideMenuItem count={postsCount} Icon={MdRssFeed}>
+          Activities
+        </SideMenuItem>
+        <SideMenuItem count={friendsCount} Icon={FiUsers}>
+          Friends
+        </SideMenuItem>
+        <SideMenuItem count={likesCount} Icon={FiHeart}>
+          You Liked
+        </SideMenuItem>
+        <SideMenuItem count={commentsCount} Icon={FaRegCommentDots}>
+          Your Comments
+        </SideMenuItem>
       </div>
       <Link
         to="create-post"
